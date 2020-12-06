@@ -4,10 +4,10 @@
 ## Deployed 連結
 ## Demo 影片連結
 ## modules
-@hapi/joi<br>
+@hapi/joi:check registration data<br>
 cors<br>
 axios<br>
-bcryptjs<br>
+bcryptjs: encrypt blank password<br>
 jsonwebtoken<br>
 mongoose<br>
 express<br>
