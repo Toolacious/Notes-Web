@@ -1,0 +1,59 @@
+type Query {
+    users(query: String): [User!]!
+    user(query: ID): User
+}
+
+type Mutation {
+    createUser(data: CreateUserInput!): User!
+    clearMessages(query: String): ClearMessage!
+    login(data: LoginInput!): Token!
+    logout: Boolean!
+}
+
+type Subscription {
+    message: MessageSubscriptionPayload!
+}
+
+input CreateUserInput {
+    fname: String!
+    lname: String!
+    name: String!
+    email: String!
+    password: String!
+}
+
+input LoginInput {
+    email: String!
+    password: String!
+}
+
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    password: String!
+}
+
+type Token {
+    accessToken: String!
+    id: ID!
+}
+
+enum MutationType {
+    CREATED
+    DELETED
+}
+
+"""
+if Mutation is CREATED => Subscription return mutation and created data
+if Mutation is DELETED => Subscription return mutation and left data
+"""
+type MessageSubscriptionPayload {
+    mutation: MutationType!
+    data: [User!]
+}
+
+type ClearMessage {
+    mutation: MutationType!
+    name: String
+}

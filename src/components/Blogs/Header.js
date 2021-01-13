@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -7,6 +7,12 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+
+import { useHistory } from "react-router-dom";
+import { useMutation } from "@apollo/react-hooks";
+import { LOGOUT_Mutation } from "../../graphql/logout";
+import { AuthContext } from "../../routes/auth";
+import { getAccessToken, setAccessToken } from "../../accessToken";
 
 const useStyles = makeStyles((theme) => ({
     toolbar: {
@@ -26,9 +32,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Header(props) {
+    const context = useContext(AuthContext);
     const classes = useStyles();
     const { sections, title } = props;
-
+    const history = useHistory();
+    const [logout] = useMutation(LOGOUT_Mutation);
     return (
         <React.Fragment>
             <Toolbar className={classes.toolbar}>
@@ -46,7 +54,19 @@ export default function Header(props) {
                 <IconButton>
                     <SearchIcon />
                 </IconButton>
-                <Button variant="outlined" size="small" href="/">
+                <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={async (e) => {
+                        e.preventDefault();
+                        await logout();
+                        setAccessToken("");
+                        if (!getAccessToken()) {
+                            history.push("/");
+                            context.logout();
+                        }
+                    }}
+                >
                     Log out
                 </Button>
             </Toolbar>

@@ -14,8 +14,13 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
-import AuthApi from "../utils/AuthApi";
-import { signup } from "../axios";
+import { useMutation } from "@apollo/react-hooks";
+import { CREATE_USER_MUTATION } from "../graphql/mutations";
+import { LOGIN_Mutation } from "../graphql/login";
+import { setAccessToken } from "../accessToken";
+import { useHistory } from "react-router-dom";
+
+import { AuthContext } from "../routes/auth";
 
 function Copyright() {
     return (
@@ -51,30 +56,50 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignUp() {
+    const context = useContext(AuthContext);
     const [email, setEmail] = useState("");
     const [password, setPass] = useState("");
     const [name, setUsername] = useState("");
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+    const history = useHistory();
+    const [addUser] = useMutation(CREATE_USER_MUTATION);
+    const [login, { loading, error }] = useMutation(LOGIN_Mutation);
     const classes = useStyles();
-    const authApi = useContext(AuthApi);
+
     const handleSignUp = async (e) => {
         e.preventDefault();
-        const msg = await signup({ name, email, password });
-        if (msg[0] === "S") {
-            authApi.setAuth(true);
+        try {
+            await addUser({
+                variables: {
+                    fname,
+                    lname,
+                    name,
+                    email,
+                    password,
+                },
+            });
+            const response = await login({
+                variables: {
+                    email,
+                    password,
+                },
+            });
+            if (!error && !loading) {
+                console.log("redirect");
+            }
+            if (response && response.data) {
+                console.log("response");
+                console.log(response.data);
+                setAccessToken(response.data.login.accessToken);
+            }
+            context.login(response.data.login);
+            history.push("/dashboard");
+        } catch (err) {
+            console.log(err);
         }
     };
-    const handleOnchange = ({ target }) => {
-        if (target.name === "email") {
-            setEmail(target.value);
-            console.log(target.value);
-        } else if (target.name === "password") {
-            setPass(target.value);
-            console.log(target.value);
-        } else {
-            setUsername(target.value);
-            console.log(target.value);
-        }
-    };
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -97,6 +122,7 @@ export default function SignUp() {
                                 id="firstName"
                                 label="First Name"
                                 autoFocus
+                                onChange={(e) => setFname(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -108,6 +134,7 @@ export default function SignUp() {
                                 label="Last Name"
                                 name="lastName"
                                 autoComplete="lname"
+                                onChange={(e) => setLname(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -120,7 +147,7 @@ export default function SignUp() {
                                 id="Username"
                                 label="Username"
                                 autoFocus
-                                onChange={handleOnchange}
+                                onChange={(e) => setUsername(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -132,7 +159,7 @@ export default function SignUp() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
-                                onChange={handleOnchange}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -145,7 +172,7 @@ export default function SignUp() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                onChange={handleOnchange}
+                                onChange={(e) => setPass(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12}>

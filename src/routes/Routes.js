@@ -1,60 +1,20 @@
-import React, { useContext } from "react";
+import React from "react";
 
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch } from "react-router-dom";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
 import Blog from "../components/Blogs/Blog";
-import AuthApi from "../utils/AuthApi";
-
+import AuthRoute from "./authRoute";
+import ProtectRoute from "./protectRoute";
 function Routes() {
-    const authApi = useContext(AuthApi);
     return (
         <Switch>
-            <RouteRegisteration
-                path="/"
-                exact
-                component={SignIn}
-                auth={authApi.auth}
-            />
-            <RouteRegisteration
-                path="/login"
-                component={SignIn}
-                auth={authApi.auth}
-            />
-            <RouteRegisteration
-                path="/signup"
-                component={SignUp}
-                auth={authApi.auth}
-            />
-            <RouteProtected
-                path="/dashboard"
-                component={Blog}
-                auth={authApi.auth}
-            />
+            <AuthRoute exact path="/" component={SignIn} />
+            <AuthRoute exact path="/login" component={SignIn} />
+            <AuthRoute exact path="/signup" component={SignUp} />
+            <ProtectRoute exact path="/dashboard" component={Blog} />
         </Switch>
     );
 }
-
-const RouteRegisteration = ({ auth, component: Component, ...rest }) => {
-    return (
-        <Route
-            {...rest}
-            render={(props) =>
-                !auth ? <Component {...props} /> : <Redirect to="/dashboard" />
-            }
-        />
-    );
-};
-
-const RouteProtected = ({ auth, component: Component, ...rest }) => {
-    return (
-        <Route
-            {...rest}
-            render={(props) =>
-                auth ? <Component {...props} /> : <Redirect to="/signin" />
-            }
-        />
-    );
-};
 
 export default Routes;

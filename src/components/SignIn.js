@@ -14,8 +14,13 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 
-import { signin } from "../axios";
-import AuthApi from "../utils/AuthApi";
+import { useMutation } from "@apollo/react-hooks";
+//import { signin } from "../axios";
+import { LOGIN_Mutation } from "../graphql/login";
+import { AuthContext } from "../routes/auth";
+
+import { setAccessToken } from "../accessToken";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
     return (
@@ -51,26 +56,31 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn() {
+    const context = useContext(AuthContext);
     const classes = useStyles();
     const [email, setEmail] = useState("");
     const [password, setPass] = useState("");
-    const authApi = useContext(AuthApi);
-    const handleOnchange = ({ target }) => {
-        if (target.name === "email") {
-            setEmail(target.value);
-            console.log(target.value);
-        } else {
-            setPass(target.value);
-            console.log(target.value);
-        }
-    };
+    const [login, { loading, error }] = useMutation(LOGIN_Mutation);
+    const history = useHistory();
+
     const handleSignin = async (e) => {
         e.preventDefault();
-        const msg = await signin({ email, password });
-        if (msg[0] === "S") {
+        const response = await login({
+            variables: {
+                email,
+                password,
+            },
+        });
+        if (!error && !loading) {
             console.log("redirect");
-            authApi.setAuth(true);
         }
+        if (response && response.data) {
+            console.log("response");
+            console.log(response.data);
+            setAccessToken(response.data.login.accessToken);
+        }
+        context.login(response.data.login);
+        history.push("/dashboard");
     };
 
     return (
@@ -94,7 +104,7 @@ export default function SignIn() {
                         name="email"
                         autoComplete="email"
                         autoFocus
-                        onChange={handleOnchange}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <TextField
                         variant="outlined"
@@ -106,7 +116,7 @@ export default function SignIn() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        onChange={handleOnchange}
+                        onChange={(e) => setPass(e.target.value)}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
