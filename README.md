@@ -12,6 +12,9 @@ jsonwebtoken<br>
 mongoose<br>
 express<br>
 dotenv-defaults<br>
+## Reference 
+https://github.com/benawad/jwt-auth-example.git
+https://github.com/hidjou/classsed-merng-client.git
 ## Framework
 前端:Materials-UI<br>
 後端:
