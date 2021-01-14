@@ -13,7 +13,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useMutation } from "@apollo/react-hooks";
 //import { signin } from "../axios";
 import { LOGIN_Mutation } from "../graphql/login";
@@ -58,30 +59,51 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
     const context = useContext(AuthContext);
     const classes = useStyles();
-    const [email, setEmail] = useState("");
-    const [password, setPass] = useState("");
     const [login, { loading, error }] = useMutation(LOGIN_Mutation);
+    const [loginErr, setloginErr] = useState("");
     const history = useHistory();
+    const validationSchema = Yup.object({
+        email: Yup.string("Enter your email")
+            .email("Enter a valid email")
+            .required("Email is required"),
+        password: Yup.string("")
+            .min(6, "Password must contain at least 6 characters")
+            .required("Enter your password"),
+    });
 
-    const handleSignin = async (e) => {
-        e.preventDefault();
-        const response = await login({
-            variables: {
-                email,
-                password,
-            },
-        });
-        if (!error && !loading) {
-            console.log("redirect");
-        }
-        if (response && response.data) {
-            console.log("response");
-            console.log(response.data);
-            setAccessToken(response.data.login.accessToken);
-        }
-        context.login(response.data.login);
-        history.push("/dashboard");
-    };
+    const formik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            try {
+                const { email, password } = values;
+                console.log(email);
+                console.log(password);
+                const response = await login({
+                    variables: {
+                        email,
+                        password,
+                    },
+                });
+                if (!error && !loading) {
+                    console.log("redirect");
+                }
+                if (response && response.data) {
+                    console.log("response");
+                    console.log(response.data);
+                    setAccessToken(response.data.login.accessToken);
+                }
+                context.login(response.data.login);
+                history.push("/dashboard");
+            } catch (err) {
+                console.log(err.message);
+                setloginErr(err.message.slice(15));
+            }
+        },
+    });
 
     return (
         <Container component="main" maxWidth="xs">
@@ -93,7 +115,11 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form
+                    className={classes.form}
+                    onSubmit={formik.handleSubmit}
+                    noValidate
+                >
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -104,8 +130,21 @@ export default function SignIn() {
                         name="email"
                         autoComplete="email"
                         autoFocus
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={
+                            (formik.touched.email &&
+                                Boolean(formik.errors.email)) ||
+                            loginErr[0] === "E"
+                        }
+                        helperText={
+                            (formik.touched.email && formik.errors.email) ||
+                            loginErr[0] === "E"
+                                ? loginErr
+                                : null
+                        }
                     />
+
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -116,7 +155,19 @@ export default function SignIn() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        onChange={(e) => setPass(e.target.value)}
+                        onChange={formik.handleChange}
+                        error={
+                            (formik.touched.password &&
+                                Boolean(formik.errors.password)) ||
+                            loginErr[0] === "P"
+                        }
+                        helperText={
+                            (formik.touched.password &&
+                                formik.errors.password) ||
+                            loginErr[0] === "P"
+                                ? loginErr
+                                : null
+                        }
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -128,7 +179,7 @@ export default function SignIn() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={handleSignin}
+                        disabled={formik.isSubmitting}
                     >
                         Sign In
                     </Button>

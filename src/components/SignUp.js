@@ -13,7 +13,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useMutation } from "@apollo/react-hooks";
 import { CREATE_USER_MUTATION } from "../graphql/mutations";
 import { LOGIN_Mutation } from "../graphql/login";
@@ -57,48 +58,79 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
     const context = useContext(AuthContext);
-    const [email, setEmail] = useState("");
-    const [password, setPass] = useState("");
-    const [name, setUsername] = useState("");
-    const [fname, setFname] = useState("");
-    const [lname, setLname] = useState("");
+
+    const validationSchema = Yup.object({
+        fname: Yup.string("Enter your first name")
+            .min(2, "Fist name should be of minimum 2 characters length")
+            .max(50)
+            .required("First name is required"),
+        lname: Yup.string("Enter your last name")
+            .min(2, "Fist name should be of minimum 2 characters length")
+            .required("Last name is required"),
+        name: Yup.string("Enter a name")
+            .min(6, "Username should be of minimum 6 characters length")
+            .required("Name is required"),
+        email: Yup.string("Enter your email")
+            .email("Enter a valid email")
+            .required("Email is required"),
+        password: Yup.string("")
+            .min(6, "Password must contain at least 6 characters")
+            .required("Enter your password"),
+        confirmPassword: Yup.string("Enter your password")
+            .required("Confirm your password")
+            .oneOf([Yup.ref("password")], "Password does not match"),
+    });
+
     const history = useHistory();
     const [addUser] = useMutation(CREATE_USER_MUTATION);
-    const [login, { loading, error }] = useMutation(LOGIN_Mutation);
+    const [regiErr, setRegiErr] = useState("");
+    const [login, { loading }] = useMutation(LOGIN_Mutation);
     const classes = useStyles();
-
-    const handleSignUp = async (e) => {
-        e.preventDefault();
-        try {
-            await addUser({
-                variables: {
-                    fname,
-                    lname,
-                    name,
-                    email,
-                    password,
-                },
-            });
-            const response = await login({
-                variables: {
-                    email,
-                    password,
-                },
-            });
-            if (!error && !loading) {
-                console.log("redirect");
+    const formik = useFormik({
+        initialValues: {
+            fname: "",
+            lname: "",
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            //alert(JSON.stringify(values, null, 2));
+            try {
+                const { fname, lname, name, email, password } = values;
+                await addUser({
+                    variables: {
+                        fname,
+                        lname,
+                        name,
+                        email,
+                        password,
+                    },
+                });
+                const response = await login({
+                    variables: {
+                        email,
+                        password,
+                    },
+                });
+                if (!loading) {
+                    console.log("redirect");
+                }
+                if (response && response.data) {
+                    console.log("response");
+                    console.log(response.data);
+                    setAccessToken(response.data.login.accessToken);
+                }
+                context.login(response.data.login);
+                history.push("/dashboard");
+            } catch (err) {
+                console.log(err.message);
+                setRegiErr(err.message.slice(15));
             }
-            if (response && response.data) {
-                console.log("response");
-                console.log(response.data);
-                setAccessToken(response.data.login.accessToken);
-            }
-            context.login(response.data.login);
-            history.push("/dashboard");
-        } catch (err) {
-            console.log(err);
-        }
-    };
+        },
+    });
 
     return (
         <Container component="main" maxWidth="xs">
@@ -110,19 +142,31 @@ export default function SignUp() {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form
+                    className={classes.form}
+                    onSubmit={formik.handleSubmit}
+                    noValidate
+                >
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete="fname"
-                                name="firstName"
+                                name="fname"
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="firstName"
-                                label="First Name"
+                                id="fname"
+                                label="First name"
                                 autoFocus
-                                onChange={(e) => setFname(e.target.value)}
+                                value={formik.values.fname}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.fname &&
+                                    Boolean(formik.errors.fname)
+                                }
+                                helperText={
+                                    formik.touched.fname && formik.errors.fname
+                                }
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -130,24 +174,40 @@ export default function SignUp() {
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="lastName"
-                                label="Last Name"
-                                name="lastName"
+                                id="lname"
+                                label="Last name"
+                                name="lname"
                                 autoComplete="lname"
-                                onChange={(e) => setLname(e.target.value)}
+                                value={formik.values.lname}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.lname &&
+                                    Boolean(formik.errors.lname)
+                                }
+                                helperText={
+                                    formik.touched.lname && formik.errors.lname
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 autoComplete="username"
-                                name="Username"
+                                name="name"
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="Username"
+                                id="name"
                                 label="Username"
                                 autoFocus
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={formik.values.name}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.name &&
+                                    Boolean(formik.errors.name)
+                                }
+                                helperText={
+                                    formik.touched.name && formik.errors.name
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -159,7 +219,18 @@ export default function SignUp() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={formik.values.email}
+                                onChange={formik.handleChange}
+                                error={
+                                    (formik.touched.email &&
+                                        Boolean(formik.errors.email)) ||
+                                    regiErr !== ""
+                                }
+                                helperText={
+                                    (formik.touched.email &&
+                                        formik.errors.email) ||
+                                    regiErr
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -172,7 +243,36 @@ export default function SignUp() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                onChange={(e) => setPass(e.target.value)}
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.password &&
+                                    Boolean(formik.errors.password)
+                                }
+                                helperText={
+                                    formik.touched.password &&
+                                    formik.errors.password
+                                }
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="confirmPassword"
+                                label="Confirm Password"
+                                type="password"
+                                id="confirmPassword"
+                                autoComplete="current-password"
+                                onChange={formik.handleChange}
+                                error={
+                                    formik.touched.confirmPassword &&
+                                    Boolean(formik.errors.confirmPassword)
+                                }
+                                helperText={
+                                    formik.touched.confirmPassword &&
+                                    formik.errors.confirmPassword
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -193,7 +293,7 @@ export default function SignUp() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={handleSignUp}
+                        disabled={formik.isSubmitting}
                     >
                         Sign Up
                     </Button>

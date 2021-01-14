@@ -12,6 +12,7 @@ type Mutation {
 
 type Subscription {
     message: MessageSubscriptionPayload!
+    errors: ErrorMessageSubscriptionPayload!
 }
 
 input CreateUserInput {
@@ -51,6 +52,18 @@ if Mutation is DELETED => Subscription return mutation and left data
 type MessageSubscriptionPayload {
     mutation: MutationType!
     data: [User!]
+}
+
+type ErrorMessageSubscriptionPayload {
+    message: String!
+    context: contextMsg!
+}
+
+type contextMsg {
+    value: String
+    invalid: [String]
+    key: String!
+    label: String!
 }
 
 type ClearMessage {

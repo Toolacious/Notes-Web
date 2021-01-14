@@ -92,7 +92,7 @@ const RefreshLink = new TokenRefreshLink({
     },
 });
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
+const errorLink = onError(({ graphQLErrors, networkError, errorMessage }) => {
     console.log(graphQLErrors);
     console.log(networkError);
 });

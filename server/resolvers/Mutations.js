@@ -9,7 +9,9 @@ export const Mutation = {
         try {
             // validate
             const { error } = registerValidate(args.data);
-            if (error) throw new Error(error.details[0].message);
+            if (error) {
+                throw new Error(error.details[0].message);
+            }
             // checking if email exist
             const emailExist = await User.findOne({ email: args.data.email });
             if (emailExist) throw new Error("Email already exist");
@@ -36,6 +38,7 @@ export const Mutation = {
             return saveMessage;
         } catch (err) {
             console.log(err);
+            return err;
         }
     },
     clearMessages: async (parent, args, { User, pubsub }, info) => {
@@ -71,7 +74,7 @@ export const Mutation = {
                 args.data.password,
                 user.password
             );
-            if (!validPassword) throw new Error("Invalid password");
+            if (!validPassword) throw new Error("Password is invalid");
 
             // login successful
             sendRefreshToken(response, createRefreshToken(user));
@@ -82,6 +85,7 @@ export const Mutation = {
             };
         } catch (err) {
             console.log(err);
+            return err;
         }
     },
     logout: async (parent, args, { response }, info) => {
