@@ -139,9 +139,7 @@ export default function SignIn() {
                         }
                         helperText={
                             (formik.touched.email && formik.errors.email) ||
-                            loginErr[0] === "E"
-                                ? loginErr
-                                : null
+                            (loginErr[0] === "E" ? loginErr : null)
                         }
                     />
 
@@ -164,9 +162,7 @@ export default function SignIn() {
                         helperText={
                             (formik.touched.password &&
                                 formik.errors.password) ||
-                            loginErr[0] === "P"
-                                ? loginErr
-                                : null
+                            (loginErr[0] === "P" ? loginErr : null)
                         }
                     />
                     <FormControlLabel
