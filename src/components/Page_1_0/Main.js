@@ -18,7 +18,7 @@ export default function Main(props) {
     const { posts, title } = props;
 
     return (
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={7}>
             <Typography variant="h6" gutterBottom>
                 {title}
             </Typography>

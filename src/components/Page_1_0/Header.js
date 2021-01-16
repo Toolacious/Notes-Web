@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         flexWrap: "nowrap",
         borderBottom: `1px solid ${theme.palette.divider}`,
+        zIndex: theme.zIndex.drawer + 1,
     },
     icon: {
         height: "48px",

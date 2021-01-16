@@ -10,7 +10,11 @@ import Header from "./Header";
 import MainFeaturedPost from "./MainFeaturedPost";
 import FeaturedPost from "./FeaturedPost";
 import Main from "./Main";
-import Sidebar from "./Sidebar";
+
+import PersistentDrawerLeft from "./LeftDrawer"
+import PersistentDrawerRight from "./RightDrawer"
+import TagBar from "./TagBar"
+
 import Footer from "./Footer";
 import post1 from "./blog-post.1.md";
 import post2 from "./blog-post.2.md";
@@ -20,6 +24,11 @@ const useStyles = makeStyles((theme) => ({
     mainGrid: {
         marginTop: theme.spacing(3),
     },
+    pageContainer: {
+        minHeight: "100%",
+        display: "flex",
+        flexDirection: "column",
+    }
 }));
 
 const sections = [
@@ -95,30 +104,31 @@ export default function Page_1_0() {
     return (
         <React.Fragment>
             <CssBaseline />
-            <Container maxWidth={false}>
-                <Header title="Blog" sections={sections} />
-                <main>
-                    <MainFeaturedPost post={mainFeaturedPost} />
+            <Container maxWidth={false} disableGutters={true} className={classes.pageContainer}>
+                <Header />
+                
+                <main style={{display: "flex", flexGrow: 1, alignItems: "stretch"}}>
+                    <PersistentDrawerLeft></PersistentDrawerLeft>
+                    <div style={{display: "flex", flexGrow: 1, flexDirection: "column"}}>
+                    
+                        <Footer
+                            title="Footer"
+                            description="Something here to give the footer a purpose!"
+                        />
+                        <TagBar></TagBar>
+                    </div>
+                    <PersistentDrawerRight></PersistentDrawerRight>
+                    
+                </main>
+                
+            </Container>
+        </React.Fragment>
+    );
+}
+/*
+<MainFeaturedPost post={mainFeaturedPost} />
                     <Grid container spacing={4}>
                         {featuredPosts.map((post) => (
                             <FeaturedPost key={post.title} post={post} />
                         ))}
-                    </Grid>
-                    <Grid container spacing={5} className={classes.mainGrid}>
-                        <Main title="From the firehose" posts={posts} />
-                        <Sidebar
-                            title={sidebar.title}
-                            description={sidebar.description}
-                            archives={sidebar.archives}
-                            social={sidebar.social}
-                        />
-                    </Grid>
-                </main>
-            </Container>
-            <Footer
-                title="Footer"
-                description="Something here to give the footer a purpose!"
-            />
-        </React.Fragment>
-    );
-}
+                    </Grid> */
