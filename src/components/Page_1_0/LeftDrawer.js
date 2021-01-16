@@ -23,7 +23,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import { TabRounded } from '@material-ui/icons';
 
 import SearchBox from './SearchBox'
-import FileTree from './FileTree'
+import FolderTree from './FolderTree'
 
 const sidebarWidth = 32;
 const drawerWidth = 256;
@@ -138,7 +138,7 @@ export default function PersistentDrawerLeft() {
                     docked: classes.drawerPaperWrapper,
                 }}
             >
-                {(mode === 'search')? <SearchBox></SearchBox> : <FileTree></FileTree>}
+                {(mode === 'search')? <SearchBox></SearchBox> : <FolderTree></FolderTree>}
               
             </Drawer>
             
