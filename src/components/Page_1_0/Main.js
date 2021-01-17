@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext, useCallback, useEffect, useState } from "react";
+import { filecontext } from "../../context/filetree";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -113,10 +114,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Main(props) {
+export default function Main() {
   const classes = useStyles();
   const theme = useTheme();
-  const { posts, title } = props;
+  const { usernotes, openFiles } = useContext(filecontext);
 
   const [mode, setMode] = React.useState("main");
   const [currentPageIndex, setcurrentPageIndex] = React.useState(0);
@@ -171,99 +172,105 @@ export default function Main(props) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <div className={classes.pageBar}>
-        {chipData.map((data, index) => {
-          return (
-            <li key={index}>
-              <Chip
-                size="small"
-                label={data}
-                disableRipple={true}
-                onClick={() => handleCurrentPageIndex(index)}
-                onDelete={() => handleDelete(index)}
-                className={clsx(classes.chip, {
-                  [classes.chipFocus]: index === currentPageIndex,
-                })}
-                classes={{
-                  root: classes.chipRoot,
-                  label: classes.chipText,
-                }}
-              />
-            </li>
-          );
-        })}
-        <div
-          style={{
-            flexGrow: 1,
-            height: pageBarHeight,
-            borderBottom: `1px solid ${theme.palette.divider}`,
-          }}
-        ></div>
-      </div>
-      <div className={classes.mainWindowWrapper}>
-        <div className={classes.modeButtonWrapper}>
-          <IconButton
-            color={mode === "main" ? "inherit" : "default"}
-            onClick={() => handleMode("main")}
-            classes={{
-              root: classes.nopad,
-            }}
-            disableRipple={true}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color={mode === "mix" ? "inherit" : "default"}
-            onClick={() => handleMode("mix")}
-            classes={{
-              root: classes.nopad,
-            }}
-            disableRipple={true}
-          >
-            <VisibilityIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => save()}
-            classes={{
-              root: classes.nopad,
-            }}
-            disableRipple={true}
-          >
-            <SaveIcon />
-          </IconButton>
-        </div>
-        {mode === "main" || mode === "mix" ? (
-          <Paper
-            elevation={0}
-            className={classes.mainWindow}
-            style={mode === "main" ? { width: "100%" } : {}}
-          >
-            <textarea
-              className={`input ${classes.inputStyle}`}
-              value={contentData[currentPageIndex]}
-              onChange={(e) => {
-                handleContentData(currentPageIndex, e.target.value);
+      {openFiles.length === 0 ? (
+        <div className={classes.mainWindowWrapper}>No Page</div>
+      ) : (
+        <>
+          <div className={classes.pageBar}>
+            {openFiles.map((fileID, index) => {
+              return (
+                <li key={index}>
+                  <Chip
+                    size="small"
+                    label={usernotes.find((e) => e.id === fileID).title}
+                    disableRipple={true}
+                    onClick={() => handleCurrentPageIndex(index)}
+                    onDelete={() => handleDelete(index)}
+                    className={clsx(classes.chip, {
+                      [classes.chipFocus]: index === currentPageIndex,
+                    })}
+                    classes={{
+                      root: classes.chipRoot,
+                      label: classes.chipText,
+                    }}
+                  />
+                </li>
+              );
+            })}
+            <div
+              style={{
+                flexGrow: 1,
+                height: pageBarHeight,
+                borderBottom: `1px solid ${theme.palette.divider}`,
               }}
-            ></textarea>
-          </Paper>
-        ) : (
-          <></>
-        )}
-        {mode === "mix" ? <Divider orientation="vertical"></Divider> : null}
-        {mode === "view" || mode === "mix" ? (
-          <Paper
-            elevation={0}
-            className={classes.viewWindow}
-            style={mode === "view" ? { width: "100%" } : {}}
-          >
-            <Markdown className={`input ${classes.outputStyle}`}>
-              {contentData[currentPageIndex]}
-            </Markdown>
-          </Paper>
-        ) : (
-          <></>
-        )}
-      </div>
+            ></div>
+          </div>
+          <div className={classes.mainWindowWrapper}>
+            <div className={classes.modeButtonWrapper}>
+              <IconButton
+                color={mode === "main" ? "inherit" : "default"}
+                onClick={() => handleMode("main")}
+                classes={{
+                  root: classes.nopad,
+                }}
+                disableRipple={true}
+              >
+                <EditIcon />
+              </IconButton>
+              <IconButton
+                color={mode === "mix" ? "inherit" : "default"}
+                onClick={() => handleMode("mix")}
+                classes={{
+                  root: classes.nopad,
+                }}
+                disableRipple={true}
+              >
+                <VisibilityIcon />
+              </IconButton>
+              <IconButton
+                onClick={() => save()}
+                classes={{
+                  root: classes.nopad,
+                }}
+                disableRipple={true}
+              >
+                <SaveIcon />
+              </IconButton>
+            </div>
+            {mode === "main" || mode === "mix" ? (
+              <Paper
+                elevation={0}
+                className={classes.mainWindow}
+                style={mode === "main" ? { width: "100%" } : {}}
+              >
+                <textarea
+                  className={`input ${classes.inputStyle}`}
+                  value={contentData[currentPageIndex]}
+                  onChange={(e) => {
+                    handleContentData(currentPageIndex, e.target.value);
+                  }}
+                ></textarea>
+              </Paper>
+            ) : (
+              <></>
+            )}
+            {mode === "mix" ? <Divider orientation="vertical"></Divider> : null}
+            {mode === "view" || mode === "mix" ? (
+              <Paper
+                elevation={0}
+                className={classes.viewWindow}
+                style={mode === "view" ? { width: "100%" } : {}}
+              >
+                <Markdown className={`input ${classes.outputStyle}`}>
+                  {contentData[currentPageIndex]}
+                </Markdown>
+              </Paper>
+            ) : (
+              <></>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
