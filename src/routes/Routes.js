@@ -7,18 +7,16 @@ import Blog from "../components/Blogs/Blog";
 import AuthRoute from "./authRoute";
 import ProtectRoute from "./protectRoute";
 import Page_1_0 from "../components/Page_1_0/Page_1_0";
-import upload from "../components/upload";
 function Routes() {
-    return (
-        <Switch>
-            <AuthRoute exact path="/" component={SignIn} />
-            <AuthRoute exact path="/login" component={SignIn} />
-            <AuthRoute exact path="/signup" component={SignUp} />
-            <ProtectRoute exact path="/dashboard" component={Blog} />
-            <Route exact path="/page_1_0" component={Page_1_0} />
-            <Route exact path="/upload" component={upload} />
-        </Switch>
-    );
+  return (
+    <Switch>
+      <AuthRoute exact path="/" component={SignIn} />
+      <AuthRoute exact path="/login" component={SignIn} />
+      <AuthRoute exact path="/signup" component={SignUp} />
+      <ProtectRoute exact path="/dashboard" component={Blog} />
+      <Route exact path="/page_1_0" component={Page_1_0} />
+    </Switch>
+  );
 }
 
 export default Routes;
