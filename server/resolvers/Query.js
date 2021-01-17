@@ -27,4 +27,13 @@ export const Query = {
             console.log(err);
         }
     },
+    usernotes: async (parent, { email }, { Notes }, info) => {
+        try {
+            const notes = await Notes.findOne({ email });
+            return notes.notes;
+        } catch (err) {
+            console.log(err);
+            return err;
+        }
+    },
 };

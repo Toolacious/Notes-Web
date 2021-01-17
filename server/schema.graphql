@@ -3,6 +3,7 @@ scalar Upload
 type Query {
     users(query: String): [User!]!
     user(query: ID): User
+    usernotes(email: String!): [note]!
 }
 
 type Mutation {
@@ -63,6 +64,14 @@ type User {
     name: String!
     email: String!
     password: String!
+}
+
+type note {
+    id: ID!
+    title: String!
+    markdown: String!
+    tags: [String]!
+    links: [String]!
 }
 
 type Note {

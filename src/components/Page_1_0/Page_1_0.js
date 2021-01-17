@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
@@ -10,10 +10,14 @@ import Header from "./Header";
 import MainFeaturedPost from "./MainFeaturedPost";
 import FeaturedPost from "./FeaturedPost";
 import Main from "./Main";
+import { filecontext } from "../../context/filetree";
+import { useQuery } from "@apollo/react-hooks";
+import { NOTES_QUERY } from "../../graphql/notes";
+import { AuthContext } from "../../routes/auth";
 
-import PersistentDrawerLeft from "./LeftDrawer"
-import PersistentDrawerRight from "./RightDrawer"
-import TagBar from "./TagBar"
+import PersistentDrawerLeft from "./LeftDrawer";
+import PersistentDrawerRight from "./RightDrawer";
+import TagBar from "./TagBar";
 
 import Footer from "./Footer";
 import post1 from "./blog-post.1.md";
@@ -28,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         minHeight: "100%",
         display: "flex",
         flexDirection: "column",
-    }
+    },
 }));
 
 const sections = [
@@ -100,24 +104,46 @@ const sidebar = {
 
 export default function Page_1_0() {
     const classes = useStyles();
-
-    return (
+    const context = useContext(AuthContext);
+    console.log(context);
+    const { loading, error, data, subscribeToMore } = useQuery(NOTES_QUERY, {
+        variables: { email: context.user.email },
+    });
+    return loading ? (
+        <>loading...</>
+    ) : (
         <React.Fragment>
             <CssBaseline />
-            <Container maxWidth={false} disableGutters={true} className={classes.pageContainer}>
-                <Header />
-                
-                <main style={{display: "flex", flexGrow: 1, alignItems: "stretch"}}>
-                    <PersistentDrawerLeft></PersistentDrawerLeft>
-                    <div style={{display: "flex", flexGrow: 1, flexDirection: "column", alignItems: "stretch"}}>
-                    
-                        <Main></Main>
-                        <TagBar></TagBar>
-                    </div>
-                    <PersistentDrawerRight></PersistentDrawerRight>
-                    
-                </main>
-                
+            <Container
+                maxWidth={false}
+                disableGutters={true}
+                className={classes.pageContainer}
+            >
+                <filecontext.Provider value={{ ...data, openFiles: [] }}>
+                    <Header />
+
+                    <main
+                        style={{
+                            display: "flex",
+                            flexGrow: 1,
+                            alignItems: "stretch",
+                        }}
+                    >
+                        <PersistentDrawerLeft></PersistentDrawerLeft>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexGrow: 1,
+                                flexDirection: "column",
+                                alignItems: "stretch",
+                            }}
+                        >
+                            <Main></Main>
+                            <TagBar></TagBar>
+                        </div>
+                        <PersistentDrawerRight></PersistentDrawerRight>
+                    </main>
+                </filecontext.Provider>
             </Container>
         </React.Fragment>
     );
