@@ -4,6 +4,7 @@ import { Query } from "./resolvers/Query";
 import { Mutation } from "./resolvers/Mutations";
 import { Subscription } from "./resolvers/Subscription";
 import { User } from "./model/User";
+import { Notes } from "./model/Notes";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
 import { verify } from "jsonwebtoken";
@@ -19,7 +20,7 @@ const server = new GraphQLServer({
         Mutation,
         Subscription,
     },
-    context: (req) => ({ ...req, User, pubsub }),
+    context: (req) => ({ ...req, User, pubsub, Notes }),
 });
 
 server.express.use(
@@ -74,6 +75,7 @@ if (!process.env.MONGO_URL) {
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
 });
 
 const db = mongoose.connection;

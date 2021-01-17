@@ -4,6 +4,11 @@ export const Subscription = {
             return pubsub.asyncIterator("message");
         },
     },
+    note: {
+        subscribe(parent, args, { pubsub }, info) {
+            return pubsub.asyncIterator("note");
+        },
+    },
     errors: {
         subscribe(parent, args, { pubsub }, info) {
             return pubsub.asyncIterator("errors");

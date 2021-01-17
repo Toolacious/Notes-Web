@@ -80,8 +80,6 @@ export default function SignIn() {
         onSubmit: async (values) => {
             try {
                 const { email, password } = values;
-                console.log(email);
-                console.log(password);
                 const response = await login({
                     variables: {
                         email,

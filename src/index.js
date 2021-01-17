@@ -8,16 +8,23 @@ import { ApolloClient, InMemoryCache } from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ApolloLink, Observable } from "apollo-link";
 import { onError } from "apollo-link-error";
-import { HttpLink } from "apollo-link-http";
+import { createUploadLink } from "apollo-upload-client";
 import { TokenRefreshLink } from "apollo-link-token-refresh";
+import { WebSocketLink } from "apollo-link-ws";
 import jwtDecode from "jwt-decode";
 import { AuthProvider } from "./routes/auth";
 import { setAccessToken, getAccessToken } from "./accessToken";
 
 // Create an http link:
-const httpLink = new HttpLink({
+const httpLink = createUploadLink({
     uri: "http://localhost:4000/",
     credentials: "include",
+});
+
+// Create a WebSocket link:
+const wsLink = new WebSocketLink({
+    uri: `ws://localhost:4000/`,
+    options: { reconnect: true },
 });
 
 const requestLink = new ApolloLink(
@@ -38,6 +45,7 @@ const requestLink = new ApolloLink(
                     } else console.log("no access token");
                 })
                 .then(() => {
+                    console.log(operation.getContext().headers);
                     handle = forward(operation).subscribe({
                         next: observer.next.bind(observer),
                         error: observer.error.bind(observer),
@@ -64,8 +72,6 @@ const RefreshLink = new TokenRefreshLink({
 
         try {
             const { exp, userId } = jwtDecode(token);
-            if (userId) {
-            }
             if (Date.now() >= exp * 1000) {
                 return false;
             } else {
@@ -98,7 +104,7 @@ const errorLink = onError(({ graphQLErrors, networkError, errorMessage }) => {
 });
 
 const client = new ApolloClient({
-    link: ApolloLink.from([RefreshLink, errorLink, requestLink, httpLink]),
+    link: ApolloLink.from([RefreshLink, errorLink, httpLink, wsLink]),
     cache: new InMemoryCache().restore({}),
 });
 

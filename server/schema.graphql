@@ -1,3 +1,5 @@
+scalar Upload
+
 type Query {
     users(query: String): [User!]!
     user(query: ID): User
@@ -8,10 +10,21 @@ type Mutation {
     clearMessages(query: String): ClearMessage!
     login(data: LoginInput!): Token!
     logout: Boolean!
+    signS3(filename: String!, filetype: String!): S3Payload!
+    upload(picture: Upload): Boolean!
+    createNote(data: newNoteInput!): Boolean!
+    updateNote(data: updateNoteInput!): Boolean!
+    deleteNote(id: ID!, email: String!): Boolean!
+}
+
+type S3Payload {
+    signedRequest: String!
+    url: String!
 }
 
 type Subscription {
     message: MessageSubscriptionPayload!
+    note: NoteSubscriptionPayload!
     errors: ErrorMessageSubscriptionPayload!
 }
 
@@ -28,6 +41,23 @@ input LoginInput {
     password: String!
 }
 
+input newNoteInput {
+    email: String!
+    title: String!
+    markdown: String!
+    tags: [String]!
+    links: [String]!
+}
+
+input updateNoteInput {
+    id: ID!
+    email: String!
+    title: String!
+    markdown: String!
+    tags: [String]!
+    links: [String]!
+}
+
 type User {
     id: ID!
     name: String!
@@ -35,13 +65,25 @@ type User {
     password: String!
 }
 
+type Note {
+    id: ID!
+    email: String!
+    title: String!
+    markdown: String!
+    tags: [String]!
+    links: [String]!
+}
+
 type Token {
     accessToken: String!
-    id: ID!
+    userId: ID!
+    name: String!
+    email: String!
 }
 
 enum MutationType {
     CREATED
+    UPDATED
     DELETED
 }
 
@@ -52,6 +94,11 @@ if Mutation is DELETED => Subscription return mutation and left data
 type MessageSubscriptionPayload {
     mutation: MutationType!
     data: [User!]
+}
+
+type NoteSubscriptionPayload {
+    mutation: MutationType!
+    data: Note!
 }
 
 type ErrorMessageSubscriptionPayload {

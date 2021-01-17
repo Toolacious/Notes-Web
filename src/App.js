@@ -5,6 +5,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { setAccessToken } from "./accessToken";
 import { AuthContext } from "./routes/auth";
+import decode from "jwt-decode";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -19,7 +20,14 @@ function App() {
             console.log(data);
             if (data.accessToken) {
                 setAccessToken(data.accessToken);
-                if (!context.user) context.login(data);
+                const { userId, name, email } = decode(data.accessToken);
+                if (!context.user)
+                    context.login({
+                        userId,
+                        name,
+                        email,
+                        accessToken: data.accessToken,
+                    });
             } else console.log("no access Token, Please login");
             setLoading(false);
         });

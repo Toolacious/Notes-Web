@@ -1,9 +1,13 @@
 import { sign } from "jsonwebtoken";
 
 export const createAccessToken = (user) => {
-    return sign({ userId: user.id }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "15m",
-    });
+    return sign(
+        { userId: user.id, email: user.email, name: user.name },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: "15m",
+        }
+    );
 };
 
 export const createRefreshToken = (user) => {

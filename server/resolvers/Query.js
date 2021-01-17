@@ -1,3 +1,5 @@
+import { verify } from "jsonwebtoken";
+
 export const Query = {
     users: async (parent, args, { User }, info) => {
         try {

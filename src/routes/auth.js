@@ -7,13 +7,8 @@ const initialState = {
 };
 
 if (getAccessToken()) {
+    console.log("GETGET");
     const decodedToken = jwtDecode(getAccessToken());
-
-    // if (decodedToken.exp * 1000 < Date.now()) {
-    //     localStorage.removeItem("jwtToken");
-    // } else {
-    //     initialState.user = decodedToken;
-    // }
     initialState.user = decodedToken;
 }
 
