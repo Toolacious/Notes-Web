@@ -14,7 +14,7 @@ import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
-import { WrapText } from "@material-ui/icons";
+import { AddShoppingCartRounded, WrapText } from "@material-ui/icons";
 import Markdown from "./Markdown";
 
 const pageBarHeight = 24;
@@ -117,32 +117,69 @@ const useStyles = makeStyles((theme) => ({
 export default function Main() {
   const classes = useStyles();
   const theme = useTheme();
-  const { usernotes, openFiles } = useContext(filecontext);
+  const {
+    usernotes,
+    openFiles,
+    currentOpenFile,
+    setopenFiles,
+    setcurrentOpenFile,
+  } = useContext(filecontext);
 
   const [mode, setMode] = React.useState("main");
-  const [currentPageIndex, setcurrentPageIndex] = React.useState(0);
+  const [currentPageIndex, setCurrentPageIndex] = React.useState(-1);
+  const [pageNum, setPageNum] = React.useState(0);
+  const [pages, setPages] = React.useState([]);
 
-  const demoTags = ["Angular", "jQuery", "Polymer", "React"];
-  const demoStatus = [false, false, false, false];
-  const demoData = ["", "", "", ""];
+  // add page
+  const addPage = (node) => {
+    setPages([...pages, node]);
+    setCurrentPageIndex(pageNum);
+    setPageNum(pageNum + 1);
+  };
 
-  const [chipData, setChipData] = React.useState(demoTags);
-  const [saveStatus, setSaveStatus] = React.useState(demoStatus);
-  const [contentData, setContentData] = React.useState(demoData);
+  useEffect(() => {
+    if (openFiles.length > pageNum) {
+      let fileID = openFiles[openFiles.length - 1];
+      let node = Object.assign(
+        { unsaved: false },
+        usernotes.find((e) => e.id === fileID)
+      );
+      addPage(node);
+    }
+  }, [openFiles]);
 
+  //change page in folder tree
+  useEffect(() => {
+    for (let i = 0; i < pages.length; i++) {
+      if (pages[i].id === currentOpenFile) {
+        handleCurrentPageIndex(i);
+      }
+    }
+  }, [currentOpenFile]);
+
+  // delete page
   const handleDelete = (chipToDelete) => {
-    if (saveStatus[chipToDelete]) {
+    if (pages[chipToDelete].unsaved) {
       console.log("Unsaved");
     }
-    let chips = chipData.filter((data, index) => index !== chipToDelete);
-    let datas = contentData.filter((data, index) => index !== chipToDelete);
-    let stats = saveStatus.filter((data, index) => index !== chipToDelete);
-    if (chips.length === currentPageIndex) {
-      setcurrentPageIndex(currentPageIndex - 1);
+
+    // set backend openFiles
+    let updOpenFiles = openFiles.filter(
+      (data, index) => index !== chipToDelete
+    );
+    setopenFiles(updOpenFiles);
+
+    // set frontend pages
+    let updPages = pages.filter((data, index) => index !== chipToDelete);
+    setPages(updPages);
+
+    // set currentPageIndex
+    if (chipToDelete <= currentPageIndex) {
+      handleCurrentPageIndex(currentPageIndex - 1);
     }
-    setChipData(chips);
-    setContentData(datas);
-    setSaveStatus(stats);
+
+    // set pageNum
+    setPageNum(pageNum - 1);
   };
 
   const handleMode = (updMode) => {
@@ -150,41 +187,44 @@ export default function Main() {
   };
 
   const handleCurrentPageIndex = (updIndex) => {
-    setcurrentPageIndex(updIndex);
+    setCurrentPageIndex(updIndex);
+    setcurrentOpenFile(updIndex === -1 ? "" : pages[updIndex].id);
   };
 
-  const handleContentData = (index, val) => {
-    let newContent = contentData.slice();
-    newContent[index] = val;
-    setContentData(newContent);
-
-    let newStatus = saveStatus.slice();
-    newStatus[index] = true;
-    setSaveStatus(newStatus);
+  const handleContentData = (val) => {
+    let updPages = [...pages];
+    updPages[currentPageIndex].markdown = val;
+    updPages[currentPageIndex].unsaved = true;
+    setPages(updPages);
   };
 
   const save = () => {
-    let newStatus = saveStatus.slice();
-    newStatus[currentPageIndex] = false;
-    setSaveStatus(newStatus);
+    let updPages = [...pages];
+
+    // TODO: save to backend
+    // save updPages[currentPageIndex].markdown to currentOpenFile's markdown
+    updPages[currentPageIndex].unsaved = false;
+    setPages(updPages);
   };
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      {openFiles.length === 0 ? (
+      {pages.length === 0 ? (
         <div className={classes.mainWindowWrapper}>No Page</div>
       ) : (
         <>
           <div className={classes.pageBar}>
-            {openFiles.map((fileID, index) => {
+            {pages.map((page, index) => {
               return (
                 <li key={index}>
                   <Chip
                     size="small"
-                    label={usernotes.find((e) => e.id === fileID).title}
+                    label={page.title}
                     disableRipple={true}
-                    onClick={() => handleCurrentPageIndex(index)}
+                    onClick={() => {
+                      setCurrentPageIndex(index);
+                    }}
                     onDelete={() => handleDelete(index)}
                     className={clsx(classes.chip, {
                       [classes.chipFocus]: index === currentPageIndex,
@@ -245,9 +285,9 @@ export default function Main() {
               >
                 <textarea
                   className={`input ${classes.inputStyle}`}
-                  value={contentData[currentPageIndex]}
+                  value={pages[currentPageIndex].markdown}
                   onChange={(e) => {
-                    handleContentData(currentPageIndex, e.target.value);
+                    handleContentData(e.target.value);
                   }}
                 ></textarea>
               </Paper>
@@ -262,7 +302,7 @@ export default function Main() {
                 style={mode === "view" ? { width: "100%" } : {}}
               >
                 <Markdown className={`input ${classes.outputStyle}`}>
-                  {contentData[currentPageIndex]}
+                  {pages[currentPageIndex.markdown]}
                 </Markdown>
               </Paper>
             ) : (

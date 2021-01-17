@@ -92,11 +92,12 @@ export default function FolderTree() {
       key={node.id}
       nodeId={node.id}
       onClick={(e) => {
-        const { openFiles, setopenFiles } = data;
+        const { openFiles, setopenFiles, setcurrentOpenFile } = data;
         if (!openFiles.includes(node.id) && node.id !== "root") {
           setopenFiles([...openFiles, node.id]);
           console.log(data);
         }
+        setcurrentOpenFile(node.id);
       }}
       label={
         <div style={{ display: "flex", alignItems: "center" }}>
