@@ -19,6 +19,7 @@ import Footer from "./Footer";
 import post1 from "./blog-post.1.md";
 import post2 from "./blog-post.2.md";
 import post3 from "./blog-post.3.md";
+import markdown from "../md";
 
 const useStyles = makeStyles((theme) => ({
     mainGrid: {
@@ -109,12 +110,9 @@ export default function Page_1_0() {
                 
                 <main style={{display: "flex", flexGrow: 1, alignItems: "stretch"}}>
                     <PersistentDrawerLeft></PersistentDrawerLeft>
-                    <div style={{display: "flex", flexGrow: 1, flexDirection: "column"}}>
+                    <div style={{display: "flex", flexGrow: 1, flexDirection: "column", alignItems: "stretch"}}>
                     
-                        <Footer
-                            title="Footer"
-                            description="Something here to give the footer a purpose!"
-                        />
+                        <Main></Main>
                         <TagBar></TagBar>
                     </div>
                     <PersistentDrawerRight></PersistentDrawerRight>

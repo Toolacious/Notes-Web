@@ -41,7 +41,7 @@ export default function TagBar() {
     const [tag, setTag] = React.useState('')
 
     //TODO: backend replace demo data
-    const demoTags = ['Angular', 'jQuery', 'Polymer', 'React', 'Angular', 'jQuery', 'Polymer', 'React', 'Angular']
+    const demoTags = ['Angular', 'jQuery', 'Polymer', 'React', 'Angular', 'jQuery', 'Polymer', 'React', 'Angular', 'Angular', 'jQuery', 'Polymer', 'React', 'Angular', 'jQuery', 'Polymer', 'React', 'Angular']
     const [chipData, setChipData] = React.useState(demoTags);
 
     const updTag = (e) => {
