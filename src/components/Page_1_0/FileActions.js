@@ -135,8 +135,10 @@ function FileActions(initialState) {
         });
     }
     function saveFile(id, data) {
-        // TODO: save data(md string) to file, return new usernotes data
-        setUserNotes(data);
+        let newNotes = [...state.usernotes];
+        let idx = newNotes.findIndex((e) => e.id === id);
+        newNotes[idx] = data;
+        setUserNotes(newNotes);
     }
     function closeFile(id) {
         dispatch({

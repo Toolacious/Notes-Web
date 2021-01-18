@@ -18,6 +18,8 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import { filecontext } from "../../context/filetree";
+import { mainContext } from "../../context/mainContext";
+import { ref } from "yup";
 
 const sidebarWidth = 32;
 const drawerWidth = 256;
@@ -65,63 +67,39 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PersistentDrawerRight(handleRef) {
+export default function PersistentDrawerRight() {
     const classes = useStyles();
     const theme = useTheme();
-    const { currentOpenFile, usernotes, setuserNotes } = useContext(
-        filecontext
+    const { currentOpenFile, usernotes, actions } = useContext(filecontext);
+    const { setSearchStr, setOpen, setMode, handleRef } = useContext(
+        mainContext
     );
-    const [file, setFile] = useState({});
-    const [open, setOpen] = React.useState(false);
-    const [mode, setMode] = React.useState("link");
+    const [r_open, setr_open] = useState(false);
+    const [r_mode, setr_Mode] = useState("link");
 
+    //links, tags to be showed
+    const [links, setLink] = useState([]);
     useEffect(() => {
-        if (currentOpenFile) {
-            console.log("setfile");
-            setFile(usernotes.find((e) => e.id === currentOpenFile));
+        try {
+            if (currentOpenFile) {
+                let title = usernotes.find((e) => e.id === currentOpenFile)
+                    .title;
+                let alllinks = [];
+                usernotes.forEach((e) => {
+                    e.links.forEach((ele) => {
+                        if (ele === title) {
+                            alllinks.push([e.title, e.id]);
+                        }
+                    });
+                });
+                console.log("setlink");
+                setLink(alllinks);
+            }
+        } catch (error) {
+            console.log(error);
         }
         return () => {};
-    }, [currentOpenFile]);
-    //TODO: backend replace demo data
-    const demoLinks = [
-        "Algebraic Closure",
-        "Brauwer Group",
-        "Celsius",
-        "Domain Adaptation",
-    ];
-    const demoTags = [
-        "a",
-        "b",
-        "c",
-        "d",
-        "a",
-        "b",
-        "c",
-        "d",
-        "a",
-        "b",
-        "c",
-        "d",
-        "a",
-        "b",
-        "c",
-        "d",
-    ];
-    //links, tags to be showed
-    const [links, setLink] = React.useState([]);
-    useEffect(() => {
-        let alllinks = [];
-        usernotes.forEach((e) => {
-            e.links.forEach((ele) => {
-                if (ele === file.title) {
-                    alllinks.push(e.title);
-                }
-            });
-        });
-        console.log("setlink");
-        setLink(alllinks);
-        return () => {};
-    }, [file, currentOpenFile]);
+    }, [usernotes, currentOpenFile]);
 
     const [tags, setTag] = useState([]);
 
@@ -138,25 +116,39 @@ export default function PersistentDrawerRight(handleRef) {
         });
         console.log("settag");
         setTag(Object.entries(alltags));
+        console.log(Object.entries(alltags));
         return () => {};
-    }, [usernotes, currentOpenFile]);
+    }, [usernotes]);
     const [showingItem, setShowingItem] = useState([]);
     useEffect(() => {
         console.log("setshowingItem");
-        setShowingItem(mode === "link" ? links : tags);
+        setShowingItem(r_mode === "link" ? links : tags);
         return () => {};
-    }, [mode, links, tags]);
+    }, [r_mode, links, tags]);
 
     const handleDrawerOpen = () => {
-        setOpen(!open);
+        setr_open(!r_open);
     };
 
     const handleMode = (updMode) => {
-        setMode(updMode);
+        setr_Mode(updMode);
+    };
+
+    const handleSearch = (tag) => {
+        setSearchStr("tags: " + tag);
+        setOpen(true);
+        setMode("search");
+        handleRef(tag);
+    };
+
+    const handleLink = (id) => {
+        actions.open(id);
+        if (document.getElementsByClassName("input")[0])
+            document.getElementsByClassName("input")[0].focus();
     };
 
     return (
-        <div className={clsx(classes.root, { [classes.rootShift]: open })}>
+        <div className={clsx(classes.root, { [classes.rootShift]: r_open })}>
             <CssBaseline />
             <div className={classes.sidebarWrapper}>
                 <IconButton
@@ -168,7 +160,7 @@ export default function PersistentDrawerRight(handleRef) {
                     }}
                     disableRipple={true}
                 >
-                    {open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                    {r_open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
                 </IconButton>
             </div>
 
@@ -176,7 +168,7 @@ export default function PersistentDrawerRight(handleRef) {
                 className={classes.drawer}
                 variant="persistent"
                 anchor="right"
-                open={open}
+                open={r_open}
                 classes={{
                     paper: classes.drawerPaper,
                     docked: classes.drawerPaperWrapper,
@@ -184,7 +176,7 @@ export default function PersistentDrawerRight(handleRef) {
             >
                 <div style={{ display: "flex" }}>
                     <IconButton
-                        color={mode === "link" ? "inherit" : "default"}
+                        color={r_mode === "link" ? "inherit" : "default"}
                         onClick={() => handleMode("link")}
                         classes={{
                             root: classes.drawerButton,
@@ -194,7 +186,7 @@ export default function PersistentDrawerRight(handleRef) {
                         <LinkIcon />
                     </IconButton>
                     <IconButton
-                        color={mode === "tag" ? "inherit" : "default"}
+                        color={r_mode === "tag" ? "inherit" : "default"}
                         onClick={() => handleMode("tag")}
                         classes={{
                             root: classes.drawerButton,
@@ -209,17 +201,22 @@ export default function PersistentDrawerRight(handleRef) {
                     <List disablePadding={true}>
                         {showingItem.map((text, index) => (
                             <>
-                                <ListItem button key={index}>
+                                <ListItem
+                                    button
+                                    key={index}
+                                    onClick={() => {
+                                        r_mode === "tag"
+                                            ? handleSearch(text[0])
+                                            : handleLink(text[1]);
+                                    }}
+                                >
                                     <ListItemText
-                                        onClick={() => {
-                                            handleRef.children(text[0]);
-                                        }}
                                         primary={
-                                            mode === "tag"
+                                            r_mode === "tag"
                                                 ? "# " +
                                                   text[0].padEnd(20, ".") +
                                                   text[1]
-                                                : text
+                                                : text[0]
                                         }
                                     />
                                 </ListItem>

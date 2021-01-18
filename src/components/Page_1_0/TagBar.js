@@ -45,33 +45,11 @@ export default function TagBar() {
     const { currentOpenFile, usernotes, setuserNotes } = useContext(
         filecontext
     );
-    console.log(usernotes);
     const context = useContext(AuthContext);
     const [addtag] = useMutation(ADDTAG_Mutation);
     const [deltag] = useMutation(DELTAG_Mutation);
     const [tag, setTag] = useState("");
 
-    //TODO: backend replace demo data
-    const demoTags = [
-        "Angular",
-        "jQuery",
-        "Polymer",
-        "React",
-        "Angular",
-        "jQuery",
-        "Polymer",
-        "React",
-        "Angular",
-        "Angular",
-        "jQuery",
-        "Polymer",
-        "React",
-        "Angular",
-        "jQuery",
-        "Polymer",
-        "React",
-        "Angular",
-    ];
     const [chipData, setChipData] = useState([]);
     useEffect(() => {
         if (currentOpenFile && usernotes) {
@@ -83,7 +61,7 @@ export default function TagBar() {
         setTag(e.target.value);
     };
 
-    const handleDelete = (chipToDelete) => {
+    const handleDelete = async (chipToDelete) => {
         try {
             let chips = chipData.filter(
                 (data, index) => index !== chipToDelete
@@ -95,14 +73,13 @@ export default function TagBar() {
                 .tags.splice(chipToDelete, 1);
             setuserNotes(newnotes);
             console.log("setusernote");
-            deltag({
+            await deltag({
                 variables: {
                     id: currentOpenFile,
                     email: context.user.email,
                     index: chipToDelete,
                 },
             });
-            //TODO: backend delete tag
         } catch (err) {
             console.log(err);
         }
@@ -112,6 +89,10 @@ export default function TagBar() {
         if (e.key === "Enter" && e.target.value !== "") {
             try {
                 console.log(tag);
+                let newnotes = [...usernotes];
+                newnotes.find((e) => e.id === currentOpenFile).tags.push(tag);
+                setuserNotes(newnotes);
+                setChipData([...chipData, tag]);
                 await addtag({
                     variables: {
                         id: currentOpenFile,
@@ -119,10 +100,6 @@ export default function TagBar() {
                         tag,
                     },
                 });
-                let newnotes = [...usernotes];
-                newnotes.find((e) => e.id === currentOpenFile).tags.push(tag);
-                setuserNotes(newnotes);
-                setChipData([...chipData, tag]);
                 setTag("");
                 e.target.value = "";
                 //TODO: backend add tag

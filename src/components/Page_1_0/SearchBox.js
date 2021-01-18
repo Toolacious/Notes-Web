@@ -13,6 +13,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import { filecontext } from "../../context/filetree";
+import { mainContext } from "../../context/mainContext";
 
 const useStyles = makeStyles((theme) => ({
     titlebar: {
@@ -29,18 +30,15 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SearchBox(ref) {
+export default function SearchBox() {
     const classes = useStyles();
     const { usernotes, actions } = useContext(filecontext);
-    //TODO: backend replace demo data
-    const demoResults = ["Algebraic Closure"];
-    const [searchStr, setSearchStr] = useState("");
+    const { searchStr, setSearchStr, ref } = useContext(mainContext);
+    //const [searchStr, setSearchStr] = useState("");
     const [showingItem, setShowingItem] = useState([]);
 
-    //TODO: backend search, return [] if input is empty string
     const search = (e) => {
         setSearchStr(e.target.value);
-        ref.children.current.focus();
     };
 
     useEffect(() => {
@@ -82,7 +80,7 @@ export default function SearchBox(ref) {
             <CssBaseline />
             <div style={{ display: "flex" }}>
                 <input
-                    ref={ref.children}
+                    ref={ref}
                     className={classes.titlebar}
                     placeholder="Search files or tags"
                     onChange={search}
@@ -93,13 +91,22 @@ export default function SearchBox(ref) {
                 <List disablePadding={true}>
                     {showingItem.map((obj, index) => (
                         <>
-                            <ListItem button key={index}>
-                                <ListItemText
-                                    onClick={() => {
-                                        actions.open(obj.id);
-                                    }}
-                                    primary={obj.title}
-                                />
+                            <ListItem
+                                button
+                                key={index}
+                                onClick={() => {
+                                    actions.open(obj.id);
+                                    if (
+                                        document.getElementsByClassName(
+                                            "input"
+                                        )[0]
+                                    )
+                                        document
+                                            .getElementsByClassName("input")[0]
+                                            .focus();
+                                }}
+                            >
+                                <ListItemText primary={obj.title} />
                             </ListItem>
                             <Divider />
                         </>

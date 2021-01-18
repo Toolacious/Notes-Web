@@ -20,6 +20,7 @@ import PersistentDrawerRight from "./RightDrawer";
 import TagBar from "./TagBar";
 
 import { FileActions } from "./FileActions";
+import { mainContext } from "../../context/mainContext";
 
 const useStyles = makeStyles((theme) => ({
     mainGrid: {
@@ -35,14 +36,19 @@ const useStyles = makeStyles((theme) => ({
 export default function Page_1_0() {
     const classes = useStyles();
     const context = useContext(AuthContext);
+    const [mode, setMode] = useState("search");
+    const [open, setOpen] = useState(false);
+    const [searchStr, setSearchStr] = useState("");
     const ref = useRef(null);
-    const handelRef = (tag) => {
-        ref.current.value = "tags: " + tag;
-        ref.current.focus();
+    const handleRef = (tag) => {
+        try {
+            ref.current.value = "tags: " + tag;
+            ref.current.focus();
+        } catch (err) {
+            console.log(err);
+        }
     };
-    //const [openFiles, setopenFiles] = useState([]);
-    //const [currentOpenFile, setcurrentOpenFile] = useState("");
-    console.log(context);
+
     const { loading, error, data, subscribeToMore } = useQuery(NOTES_QUERY, {
         variables: { email: context.user.email },
     });
@@ -85,30 +91,40 @@ export default function Page_1_0() {
                     }}
                 >
                     <Header />
-
-                    <main
-                        style={{
-                            display: "flex",
-                            flexGrow: 1,
-                            alignItems: "stretch",
+                    <mainContext.Provider
+                        value={{
+                            mode,
+                            setMode,
+                            open,
+                            setOpen,
+                            searchStr,
+                            setSearchStr,
+                            ref,
+                            handleRef,
                         }}
                     >
-                        <PersistentDrawerLeft>{ref}</PersistentDrawerLeft>
-                        <div
+                        <main
                             style={{
                                 display: "flex",
                                 flexGrow: 1,
-                                flexDirection: "column",
                                 alignItems: "stretch",
                             }}
                         >
-                            <Main></Main>
-                            <TagBar></TagBar>
-                        </div>
-                        <PersistentDrawerRight>
-                            {handelRef}
-                        </PersistentDrawerRight>
-                    </main>
+                            <PersistentDrawerLeft></PersistentDrawerLeft>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexGrow: 1,
+                                    flexDirection: "column",
+                                    alignItems: "stretch",
+                                }}
+                            >
+                                <Main></Main>
+                                <TagBar></TagBar>
+                            </div>
+                            <PersistentDrawerRight></PersistentDrawerRight>
+                        </main>
+                    </mainContext.Provider>
                 </filecontext.Provider>
             </Container>
         </React.Fragment>

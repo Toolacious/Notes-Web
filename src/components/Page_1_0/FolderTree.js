@@ -98,8 +98,10 @@ export default function FolderTree() {
         <TreeItem
             key={node.id}
             nodeId={node.id}
-            onClick={async () => {
+            onClick={async (e) => {
                 actions.open(node.id);
+                if (document.getElementsByClassName("input")[0])
+                    document.getElementsByClassName("input")[0].focus();
             }}
             label={
                 <div style={{ display: "flex", alignItems: "center" }}>

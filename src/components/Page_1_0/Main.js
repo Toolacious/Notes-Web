@@ -16,6 +16,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
 import { AddShoppingCartRounded, WrapText } from "@material-ui/icons";
 import Markdown from "./Markdown";
+import { useMutation } from "@apollo/react-hooks";
+import { UPDNOTE_Mutation } from "../../graphql/updateNote";
+import { AuthContext } from "../../routes/auth";
 
 const pageBarHeight = 24;
 const useStyles = makeStyles((theme) => ({
@@ -115,6 +118,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Main() {
+    const [updNote] = useMutation(UPDNOTE_Mutation);
+    const {
+        user: { email },
+    } = useContext(AuthContext);
     const classes = useStyles();
     const theme = useTheme();
     const {
@@ -181,12 +188,20 @@ export default function Main() {
         setPages(updPages);
     };
 
-    const save = () => {
+    const save = async () => {
         let currentPageIndex = openFiles.indexOf(currentOpenFile);
-        actions.save(currentOpenFile, pages[currentPageIndex].markdown);
-        let updPages = [...pages];
-        updPages[currentPageIndex].unsaved = false;
-        setPages(updPages);
+        const { id, title, markdown, tags, links } = pages[currentPageIndex];
+        try {
+            await updNote({
+                variables: { id, email, title, markdown, tags, links },
+            });
+            actions.save(currentOpenFile, { id, title, markdown, tags, links });
+            let updPages = [...pages];
+            updPages[currentPageIndex].unsaved = false;
+            setPages(updPages);
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -204,8 +219,13 @@ export default function Main() {
                                         size="small"
                                         label={page.title}
                                         disableRipple={true}
-                                        onClick={() => {
+                                        onClick={(e) => {
                                             actions.open(page.id);
+                                            document
+                                                .getElementsByClassName(
+                                                    "input"
+                                                )[0]
+                                                .focus();
                                         }}
                                         onDelete={() => handleDelete(page.id)}
                                         className={clsx(classes.chip, {
@@ -267,6 +287,7 @@ export default function Main() {
                                 style={mode === "main" ? { width: "100%" } : {}}
                             >
                                 <textarea
+                                    autoFocus
                                     className={`input ${classes.inputStyle}`}
                                     value={
                                         pageNum === openFiles.length

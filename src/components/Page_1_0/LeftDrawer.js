@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -24,6 +24,7 @@ import { TabRounded } from "@material-ui/icons";
 
 import SearchBox from "./SearchBox";
 import FolderTree from "./FolderTree";
+import { mainContext } from "../../context/mainContext";
 
 const sidebarWidth = 32;
 const drawerWidth = 256;
@@ -66,12 +67,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PersistentDrawerLeft(ref) {
-    console.log(ref);
+export default function PersistentDrawerLeft() {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = useState(false);
-    const [mode, setMode] = useState("search");
+    const { open, setOpen, mode, setMode } = useContext(mainContext);
+    // const [open, setOpen] = useState(false);
+    // const [mode, setMode] = useState("search");
     const [graphMode, setGraph] = useState(false);
 
     const handleMode = (updMode) => {
@@ -137,7 +138,7 @@ export default function PersistentDrawerLeft(ref) {
                 }}
             >
                 {mode === "search" ? (
-                    <SearchBox>{ref.children}</SearchBox>
+                    <SearchBox></SearchBox>
                 ) : (
                     <FolderTree></FolderTree>
                 )}
