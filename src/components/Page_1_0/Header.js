@@ -6,13 +6,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
-import SettingsIcon from '@material-ui/icons/Settings';
+import SettingsIcon from "@material-ui/icons/Settings";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
 
 import SimpleMenu from "./MenuItem";
-import AccountDialog from "./AccountDialog"
-import icon from '../../icons/icon.jpg'
+import AccountDialog from "./AccountDialog";
+import icon from "../../icons/icon.jpg";
 
 const useStyles = makeStyles((theme) => ({
     headerWrapper: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     mainWrapper: {
         display: "flex",
         flexDirection: "column",
-        flexGrow: 1
+        flexGrow: 1,
     },
     titlebar: {
         fontSize: "20px",
@@ -40,34 +40,22 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         border: "1px transparent",
     },
-    menubar:{
+    menubar: {
         minHeight: "0px",
         padding: "0px",
         overflowX: "auto",
     },
 }));
 
-const new_project = () =>{
-
-}
-
-const open_project = () =>{
-    
-}
-
-const save_project = () =>{
-    
-}
+const new_project = () => {};
 
 const file_menu = {
     name: "File",
     sections: [
-        {name: "New", func: new_project},
-        {name: "Open", func: open_project},
-        {name: "Save", func: save_project},
-        {name: "Close", func: (() => {})},
+        { name: "New", func: new_project },
+        { name: "Close", func: () => {} },
     ],
-}
+};
 
 export default function Header(props) {
     const classes = useStyles();
@@ -76,9 +64,12 @@ export default function Header(props) {
     return (
         <React.Fragment>
             <Box className={classes.headerWrapper}>
-                <img className={classes.icon} src={icon} alt="#"/>
+                <img className={classes.icon} src={icon} alt="#" />
                 <Box className={classes.mainWrapper}>
-                    <input className={classes.titlebar} defaultValue="Welcome to AAA"/>
+                    <input
+                        className={classes.titlebar}
+                        defaultValue="Welcome to AAA"
+                    />
                     <Toolbar
                         component="nav"
                         variant="dense"
@@ -88,11 +79,10 @@ export default function Header(props) {
                     </Toolbar>
                 </Box>
                 <IconButton>
-                    <SettingsIcon fontSize="large"/>
+                    <SettingsIcon fontSize="large" />
                 </IconButton>
                 <AccountDialog src={icon}></AccountDialog>
             </Box>
-            
         </React.Fragment>
     );
 }

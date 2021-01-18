@@ -14,11 +14,13 @@ import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import EditIcon from "@material-ui/icons/Edit";
 import SaveIcon from "@material-ui/icons/Save";
-import { AddShoppingCartRounded, WrapText } from "@material-ui/icons";
+import SaveDialog from "./SaveDialog";
+
 import Markdown from "./Markdown";
 import { useMutation } from "@apollo/react-hooks";
 import { UPDNOTE_Mutation } from "../../graphql/updateNote";
 import { AuthContext } from "../../routes/auth";
+import { CallReceived } from "@material-ui/icons";
 
 const pageBarHeight = 24;
 const useStyles = makeStyles((theme) => ({
@@ -100,20 +102,22 @@ const useStyles = makeStyles((theme) => ({
     },
     inputStyle: {
         width: "100%",
-        height: "100%",
+        height: "calc(100vh - 130px)",
         fontSize: "18px",
         padding: theme.spacing(2, 4),
         resize: "none",
         border: "none",
         outline: "none",
+        overflow: "auto",
     },
     outputStyle: {
         width: "100%",
-        height: "100%",
+        height: "calc(100vh - 130px)",
         fontSize: "18px",
         textAlign: "left",
         backgroundColor: "white",
         padding: theme.spacing(2, 4),
+        overflow: "auto",
     },
 }));
 
@@ -137,6 +141,8 @@ export default function Main() {
     const [mode, setMode] = React.useState("main");
     const [pageNum, setPageNum] = React.useState(0);
     const [pages, setPages] = React.useState([]);
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [dialogFunctions, setDialogFunctions] = React.useState({});
 
     // add page in frontend
     const addPage = (node) => {
@@ -160,10 +166,25 @@ export default function Main() {
     // delete page
     const handleDelete = (id) => {
         let chipToDelete = openFiles.indexOf(id);
-        console.log(chipToDelete);
         if (pages[chipToDelete].unsaved) {
-            console.log("Unsaved");
+            setOpenDialog(true);
+            setDialogFunctions({
+                updFunc: async (e) => {
+                    await save(id);
+                    deletePage(id);
+                    setOpenDialog(false);
+                },
+                closeFunc: () => {
+                    deletePage(id);
+                    setOpenDialog(false);
+                },
+            });
+        } else {
+            deletePage(id);
         }
+    };
+    const deletePage = (id) => {
+        let chipToDelete = openFiles.indexOf(id);
 
         // set backend openFiles
         actions.close(id);
@@ -188,8 +209,8 @@ export default function Main() {
         setPages(updPages);
     };
 
-    const save = async () => {
-        let currentPageIndex = openFiles.indexOf(currentOpenFile);
+    const save = async (fileID) => {
+        let currentPageIndex = openFiles.indexOf(fileID);
         const { id, title, markdown, tags, links, unsaved } = pages[
             currentPageIndex
         ];
@@ -198,7 +219,7 @@ export default function Main() {
                 await updNote({
                     variables: { id, email, title, markdown, tags, links },
                 });
-                actions.save(currentOpenFile, {
+                actions.save(fileID, {
                     id,
                     title,
                     markdown,
@@ -280,15 +301,22 @@ export default function Main() {
                             >
                                 <VisibilityIcon />
                             </IconButton>
-                            <IconButton
-                                onClick={() => save()}
-                                classes={{
-                                    root: classes.nopad,
-                                }}
-                                disableRipple={true}
-                            >
-                                <SaveIcon />
-                            </IconButton>
+                            {pageNum === openFiles.length &&
+                            pages[openFiles.indexOf(currentOpenFile)]
+                                .unsaved ? (
+                                <IconButton
+                                    onClick={() => save(currentOpenFile)}
+                                    classes={{
+                                        root: classes.nopad,
+                                    }}
+                                    disableRipple={true}
+                                >
+                                    <SaveIcon />
+                                </IconButton>
+                            ) : null}
+                            {openDialog ? (
+                                <SaveDialog func={dialogFunctions}></SaveDialog>
+                            ) : null}
                         </div>
                         {mode === "main" || mode === "mix" ? (
                             <Paper
@@ -349,14 +377,3 @@ Main.propTypes = {
     posts: PropTypes.array,
     title: PropTypes.string,
 };
-
-/*
-{posts.map((post) => (
-                <Markdown
-                    className={classes.markdown}
-                    key={post.substring(0, 40)}
-                >
-                    {post}
-                </Markdown>
-            ))} */
-//<Markdown style={outputStyle}>{markdown}</Markdown>

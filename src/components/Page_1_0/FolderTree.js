@@ -6,8 +6,6 @@ import Typography from "@material-ui/core/Typography";
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import FolderIcon from "@material-ui/icons/Folder";
-import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { AuthContext } from "../../routes/auth";
 import { AccordionActions } from "@material-ui/core";
@@ -33,7 +31,9 @@ const useStyles = makeStyles((theme) => ({
         textOverflow: "ellipsis",
     },
     colorWhite1: {
-        backgroundColor: "white",
+        "&.Mui-selected > .MuiTreeItem-content .MuiTreeItem-label": {
+            backgroundColor: "white",
+        },
     },
 }));
 
@@ -85,7 +85,7 @@ export default function FolderTree() {
             }}
             label={<TreeMenu node={node}></TreeMenu>}
             classes={{
-                selected: classes.colorWhite1,
+                root: classes.colorWhite1,
             }}
         >
             {Array.isArray(node.usernotes)
