@@ -8,6 +8,12 @@ function actionReducer(state, action) {
         case "SET":
             console.log(action.updData);
             return action.updData;
+        case "NEW":
+            return {
+                usenotes: action.data,
+                openFiles: [...state.openFiles, action.id],
+                currentOpenFile: action.id,
+            };
         case "OPEN":
             if (action.id === "root") {
                 return state;
@@ -31,10 +37,34 @@ function actionReducer(state, action) {
                 updOpenFiles[pos] = action.title;
                 return {
                     ...state,
+                    usernotes: action.data,
                     openFiles: updOpenFiles,
                 };
+            } else {
+                return {
+                    ...state,
+                    usernotes: action.data,
+                };
             }
-            return state;
+        case "DELETE":
+            updCurrentOpenFile = "";
+            updOpenFiles = [];
+            for (let i = 0; i < state.openFiles.length; i++) {
+                if (state.openFiles[i] === action.id) {
+                    if (i !== 0) {
+                        updCurrentOpenFile = state.openFiles[i - 1];
+                    }
+                    updOpenFiles = state.openFiles.filter(
+                        (e, idx) => idx !== i
+                    );
+                    break;
+                }
+            }
+            return {
+                usenotes: action.data,
+                openFiles: updOpenFiles,
+                currentOpenFile: updCurrentOpenFile,
+            };
         case "CLOSE":
             updCurrentOpenFile = "";
             updOpenFiles = [];
@@ -93,9 +123,11 @@ function FileActions(initialState) {
         // TODO: create file in backend, return new usernotes data and new file id
         let data = null;
         let id = null;
-        setUserNotes(data);
-
-        openFile(id);
+        dispatch({
+            type: "NEW",
+            id: id,
+            data: data,
+        });
     }
     function openFile(id) {
         dispatch({
@@ -105,6 +137,7 @@ function FileActions(initialState) {
     }
     function saveFile(id, data) {
         // TODO: save data(md string) to file, return new usernotes data
+        setUserNotes(data);
     }
     function closeFile(id) {
         dispatch({
@@ -115,20 +148,21 @@ function FileActions(initialState) {
     function renameFile(id, title) {
         // TODO: rename file in backend, return new usernotes data
         let data = null;
-        setUserNotes(data);
-
         dispatch({
             type: "RENAME",
             id: id,
             title: title,
+            data: data,
         });
     }
     function deleteFile(id) {
-        closeFile(id);
-
         // TODO: delete file in backend, return new usernotes data
         let data = null;
-        setUserNotes(data);
+        dispatch({
+            type: "CLOSE",
+            id: id,
+            data: data,
+        });
     }
 
     return {

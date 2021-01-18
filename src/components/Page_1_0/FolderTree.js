@@ -98,7 +98,7 @@ export default function FolderTree() {
         <TreeItem
             key={node.id}
             nodeId={node.id}
-            onClick={(e) => {
+            onClick={async () => {
                 actions.open(node.id);
             }}
             label={
