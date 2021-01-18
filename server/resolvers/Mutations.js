@@ -207,4 +207,28 @@ export const Mutation = {
             return err;
         }
     },
+    addtag: async (parent, { email, id, tag }, { Notes }, info) => {
+        try {
+            const notes = await Notes.findOne({ email });
+            const note = notes.notes.id(id);
+            note.tags.push(tag);
+            await notes.save();
+            return true;
+        } catch (err) {
+            console.log(err);
+            return err;
+        }
+    },
+    deletetag: async (parent, { index, email, id }, { Notes }, info) => {
+        try {
+            const notes = await Notes.findOne({ email });
+            const note = notes.notes.id(id);
+            note.tags.splice(index, 1);
+            await notes.save();
+            return true;
+        } catch (err) {
+            console.log(err);
+            return err;
+        }
+    },
 };

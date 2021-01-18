@@ -15,7 +15,9 @@ type Mutation {
     upload(picture: Upload): Boolean!
     createNote(data: newNoteInput!): Boolean!
     updateNote(data: updateNoteInput!): Boolean!
-    deleteNote(id: ID!, email: String!): Boolean!
+    deleteNote(id: String!, email: String!): Boolean!
+    addtag(id: String!, email: String!, tag: String!): Boolean!
+    deletetag(index: Int!, id: String!, email: String!): Boolean!
 }
 
 type S3Payload {
