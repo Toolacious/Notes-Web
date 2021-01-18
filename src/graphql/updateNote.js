@@ -4,10 +4,10 @@ export const UPDNOTE_Mutation = gql`
     mutation updateNote(
         $id: String!
         $email: String!
-        $title: String!
-        $markdown: String!
-        $tags: [String]!
-        $links: [String]!
+        $title: String
+        $markdown: String
+        $tags: [String]
+        $links: [String]
     ) {
         updateNote(
             data: {

@@ -216,6 +216,26 @@ export default function Main() {
         ];
         if (unsaved) {
             try {
+                const regex = /\[\[(\w*?)\]\]/gm;
+                const str = markdown;
+                let g;
+                let link = [];
+                while ((g = regex.exec(str)) !== null) {
+                    // This is necessary to avoid infinite loops with zero-width matches
+                    if (g.index === regex.lastIndex) {
+                        regex.lastIndex++;
+                    }
+
+                    // The result can be accessed through the `m`-variable.
+                    g.forEach((match, groupIndex) => {
+                        console.log(
+                            `Found match, group ${groupIndex}: ${match}`
+                        );
+                        if (groupIndex === 1) link.push(match);
+                    });
+                }
+                let newPages = [...pages];
+                newPages[currentPageIndex].links = link;
                 await updNote({
                     variables: { id, email, title, markdown, tags, links },
                 });
@@ -226,9 +246,8 @@ export default function Main() {
                     tags,
                     links,
                 });
-                let updPages = [...pages];
-                updPages[currentPageIndex].unsaved = false;
-                setPages(updPages);
+                newPages[currentPageIndex].unsaved = false;
+                setPages(newPages);
             } catch (err) {
                 console.log(err);
             }

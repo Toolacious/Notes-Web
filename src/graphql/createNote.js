@@ -16,6 +16,12 @@ export const ADDNOTE_Mutation = gql`
                 tags: $tags
                 links: $links
             }
-        )
+        ) {
+            id
+            tags
+            title
+            markdown
+            links
+        }
     }
 `;

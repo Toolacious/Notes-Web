@@ -160,13 +160,14 @@ export const Mutation = {
                 links,
             });
             const update = await notes.save();
+            console.log(update.notes[update.notes.length - 1]);
             pubsub.publish("note", {
                 note: {
                     mutation: "CREATED",
                     data: update.notes[update.notes.length - 1],
                 },
             });
-            return true;
+            return update.notes[update.notes.length - 1];
         } catch (err) {
             console.log(err);
             return err;
@@ -176,7 +177,12 @@ export const Mutation = {
         try {
             const { id, email, title, markdown, tags, links } = args.data;
             const notes = await Notes.findOne({ email });
-            notes.notes.id(id).set({ title, markdown, tags, links });
+            if (!title && !tags) {
+                notes.notes.id(id).set({ markdown, links });
+            } else {
+                notes.notes.id(id).set({ title });
+            }
+
             await notes.save();
             pubsub.publish("note", {
                 note: {

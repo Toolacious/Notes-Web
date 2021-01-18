@@ -1,4 +1,8 @@
 import React, { useReducer } from "react";
+import { ADDNOTE_Mutation } from "../../graphql/createNote";
+import { DELNOTE_Mutation } from "../../graphql/deleteNote";
+import { UPDNOTE_Mutation } from "../../graphql/updateNote";
+import { useMutation } from "@apollo/react-hooks";
 
 function actionReducer(state, action) {
     let updOpenFiles = [];
@@ -10,7 +14,7 @@ function actionReducer(state, action) {
             return action.updData;
         case "NEW":
             return {
-                usenotes: action.data,
+                usernotes: action.data,
                 openFiles: [...state.openFiles, action.id],
                 currentOpenFile: action.id,
             };
@@ -90,6 +94,9 @@ function actionReducer(state, action) {
 
 function FileActions(initialState) {
     const [state, dispatch] = useReducer(actionReducer, initialState);
+    const [newNote] = useMutation(ADDNOTE_Mutation);
+    const [delNote] = useMutation(DELNOTE_Mutation);
+    const [updNote] = useMutation(UPDNOTE_Mutation);
 
     function setUserNotes(data) {
         dispatch({
@@ -118,15 +125,25 @@ function FileActions(initialState) {
             },
         });
     }
-    function newFile() {
-        // TODO: create file in backend, return new usernotes data and new file id
-        let data = null;
-        let id = null;
-        dispatch({
-            type: "NEW",
-            id: id,
-            data: data,
-        });
+    async function newFile(email, title) {
+        try {
+            const a = await newNote({
+                variables: {
+                    email,
+                    title,
+                    markdown: "",
+                    tags: [],
+                    links: [],
+                },
+            });
+            dispatch({
+                type: "NEW",
+                id: a.data.createNote.id,
+                data: a.data.createNote,
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
     function openFile(id) {
         dispatch({
@@ -146,24 +163,34 @@ function FileActions(initialState) {
             id: id,
         });
     }
-    function renameFile(id, title) {
-        // TODO: rename file in backend, return new usernotes data
-        let data = null;
-        dispatch({
-            type: "RENAME",
-            id: id,
-            title: title,
-            data: data,
-        });
+    async function renameFile(id, email, title) {
+        try {
+            await updNote({ variables: { id, email, title } });
+            let data = [...state.usernotes];
+            data.find((e) => e.id === id).title = title;
+            dispatch({
+                type: "RENAME",
+                id,
+                title,
+                data,
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
-    function deleteFile(id) {
+    async function deleteFile(id, email) {
         // TODO: delete file in backend, return new usernotes data
-        let data = null;
-        dispatch({
-            type: "CLOSE",
-            id: id,
-            data: data,
-        });
+        try {
+            await delNote({ variables: { id, email } });
+            let data = [...state.usernotes];
+            dispatch({
+                type: "CLOSE",
+                id: id,
+                data: data,
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return {

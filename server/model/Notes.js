@@ -8,7 +8,7 @@ const NoteSchema = new mongoose.Schema({
     },
     markdown: {
         type: String,
-        required: true,
+        required: false,
     },
     tags: {
         type: Array,

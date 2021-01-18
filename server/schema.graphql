@@ -13,7 +13,7 @@ type Mutation {
     logout: Boolean!
     signS3(filename: String!, filetype: String!): S3Payload!
     upload(picture: Upload): Boolean!
-    createNote(data: newNoteInput!): Boolean!
+    createNote(data: newNoteInput!): note!
     updateNote(data: updateNoteInput!): Boolean!
     deleteNote(id: String!, email: String!): Boolean!
     addtag(id: String!, email: String!, tag: String!): Boolean!
@@ -55,10 +55,10 @@ input newNoteInput {
 input updateNoteInput {
     id: String!
     email: String!
-    title: String!
-    markdown: String!
-    tags: [String]!
-    links: [String]!
+    title: String
+    markdown: String
+    tags: [String]
+    links: [String]
 }
 
 type User {

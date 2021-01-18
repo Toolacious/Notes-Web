@@ -6,6 +6,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Chip from "@material-ui/core/Chip";
 import IconButton from "@material-ui/core/IconButton";
 import { WrapText } from "@material-ui/icons";
+import { Popover } from "@material-ui/core";
 
 import { filecontext } from "../../context/filetree";
 import { AuthContext } from "../../routes/auth";
@@ -45,9 +46,18 @@ export default function TagBar() {
     const { currentOpenFile, usernotes, setuserNotes } = useContext(
         filecontext
     );
+    const [anchorEle, setAnchorEle] = useState(null);
+
+    const handleClose = () => {
+        setAnchorEle(null);
+    };
+    const open = Boolean(anchorEle);
+    const id = open ? "simple-popover" : undefined;
+
     const context = useContext(AuthContext);
     const [addtag] = useMutation(ADDTAG_Mutation);
     const [deltag] = useMutation(DELTAG_Mutation);
+    const [tagerr, setTagerr] = useState(false);
     const [tag, setTag] = useState("");
 
     const [chipData, setChipData] = useState([]);
@@ -57,9 +67,19 @@ export default function TagBar() {
         }
         return () => {};
     }, [currentOpenFile, usernotes]);
+
     const updTag = (e) => {
         setTag(e.target.value);
     };
+
+    // useEffect(() => {
+    //     if (chipData.includes(tag)) {
+    //         setAnchorEle(document.getElementById("taginput"));
+    //     } else {
+    //         setAnchorEle(null);
+    //     }
+    //     return () => {};
+    // }, [tag]);
 
     const handleDelete = async (chipToDelete) => {
         try {
@@ -88,8 +108,13 @@ export default function TagBar() {
     const newTag = async (e) => {
         if (e.key === "Enter" && e.target.value !== "") {
             try {
+                if (chipData.includes(tag)) {
+                    setAnchorEle(document.getElementById("taginput"));
+                    return;
+                }
                 console.log(tag);
                 let newnotes = [...usernotes];
+                let tags = newnotes.find((e) => e.id === currentOpenFile).tags;
                 newnotes.find((e) => e.id === currentOpenFile).tags.push(tag);
                 setuserNotes(newnotes);
                 setChipData([...chipData, tag]);
@@ -102,7 +127,6 @@ export default function TagBar() {
                 });
                 setTag("");
                 e.target.value = "";
-                //TODO: backend add tag
             } catch (err) {
                 console.log(err);
             }
@@ -126,11 +150,28 @@ export default function TagBar() {
                     );
                 })}
                 <input
+                    id="taginput"
                     className={classes.titlebar}
                     placeholder="New tags"
                     onChange={updTag}
                     onKeyDown={newTag}
                 />
+                <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEle}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                    }}
+                    transformOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center",
+                    }}
+                >
+                    There's already a tag with the same name!
+                </Popover>
             </div>
         </>
     );
