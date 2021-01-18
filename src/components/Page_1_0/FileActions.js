@@ -66,17 +66,16 @@ function actionReducer(state, action) {
                 currentOpenFile: updCurrentOpenFile,
             };
         case "CLOSE":
-            updCurrentOpenFile = "";
-            updOpenFiles = [];
-            for (let i = 0; i < state.openFiles.length; i++) {
-                if (state.openFiles[i] === action.id) {
-                    if (i !== 0) {
-                        updCurrentOpenFile = state.openFiles[i - 1];
-                    }
-                    updOpenFiles = state.openFiles.filter(
-                        (e, idx) => idx !== i
-                    );
-                    break;
+            updCurrentOpenFile = state.currentOpenFile;
+            updOpenFiles = state.openFiles.filter((e) => e !== action.id);
+            if (action.id === state.currentOpenFile) {
+                let idx = state.openFiles.indexOf(state.currentOpenFile);
+                if (idx > 0) {
+                    updCurrentOpenFile = state.openFiles[idx - 1];
+                } else if (idx === 0 && state.openFiles.length > 1) {
+                    updCurrentOpenFile = state.openFiles[1];
+                } else {
+                    updCurrentOpenFile = "";
                 }
             }
             return {
