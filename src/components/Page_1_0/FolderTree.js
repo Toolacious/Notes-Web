@@ -12,30 +12,7 @@ import TreeItem from "@material-ui/lab/TreeItem";
 import { AuthContext } from "../../routes/auth";
 import { AccordionActions } from "@material-ui/core";
 
-const test = {
-    id: "4",
-    type: "file",
-    name: "Child - 4",
-};
-// const testArr = Array(50).fill(test);
-// const data = {
-//     id: "root",
-//     type: "dir",
-//     name: "(Username)",
-//     children: [
-//         {
-//             id: "1",
-//             type: "file",
-//             name: "Child - 144444444444444444444444444444444444444444444444",
-//         },
-//         {
-//             id: "3",
-//             type: "dir",
-//             name: "Child - 3",
-//             children: testArr,
-//         },
-//     ],
-// };
+import TreeMenu from "./TreeMenuItem";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
         overflow: "hidden",
         whiteSpace: "nowrap",
         textOverflow: "ellipsis",
+    },
+    colorWhite1: {
+        backgroundColor: "white",
     },
 }));
 
@@ -98,30 +78,15 @@ export default function FolderTree() {
         <TreeItem
             key={node.id}
             nodeId={node.id}
-            onClick={async (e) => {
+            onClick={(e) => {
                 actions.open(node.id);
                 if (document.getElementsByClassName("input")[0])
                     document.getElementsByClassName("input")[0].focus();
             }}
-            label={
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    {node.type === "dir" ? (
-                        <FolderIcon
-                            fontSize="small"
-                            className={classes.labelIcon}
-                        />
-                    ) : (
-                        <InsertDriveFileIcon
-                            fontSize="small"
-                            className={classes.labelIcon}
-                        />
-                    )}
-
-                    <Typography className={classes.labelText}>
-                        {node.title}
-                    </Typography>
-                </div>
-            }
+            label={<TreeMenu node={node}></TreeMenu>}
+            classes={{
+                selected: classes.colorWhite1,
+            }}
         >
             {Array.isArray(node.usernotes)
                 ? node.usernotes.map((child) => renderTree(child))

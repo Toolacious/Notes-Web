@@ -39,15 +39,6 @@ export default function Page_1_0() {
     const [mode, setMode] = useState("search");
     const [open, setOpen] = useState(false);
     const [searchStr, setSearchStr] = useState("");
-    const ref = useRef(null);
-    const handleRef = (tag) => {
-        try {
-            ref.current.value = "tags: " + tag;
-            ref.current.focus();
-        } catch (err) {
-            console.log(err);
-        }
-    };
 
     const { loading, error, data, subscribeToMore } = useQuery(NOTES_QUERY, {
         variables: { email: context.user.email },
@@ -99,8 +90,6 @@ export default function Page_1_0() {
                             setOpen,
                             searchStr,
                             setSearchStr,
-                            ref,
-                            handleRef,
                         }}
                     >
                         <main

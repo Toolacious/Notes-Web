@@ -190,17 +190,27 @@ export default function Main() {
 
     const save = async () => {
         let currentPageIndex = openFiles.indexOf(currentOpenFile);
-        const { id, title, markdown, tags, links } = pages[currentPageIndex];
-        try {
-            await updNote({
-                variables: { id, email, title, markdown, tags, links },
-            });
-            actions.save(currentOpenFile, { id, title, markdown, tags, links });
-            let updPages = [...pages];
-            updPages[currentPageIndex].unsaved = false;
-            setPages(updPages);
-        } catch (err) {
-            console.log(err);
+        const { id, title, markdown, tags, links, unsaved } = pages[
+            currentPageIndex
+        ];
+        if (unsaved) {
+            try {
+                await updNote({
+                    variables: { id, email, title, markdown, tags, links },
+                });
+                actions.save(currentOpenFile, {
+                    id,
+                    title,
+                    markdown,
+                    tags,
+                    links,
+                });
+                let updPages = [...pages];
+                updPages[currentPageIndex].unsaved = false;
+                setPages(updPages);
+            } catch (err) {
+                console.log(err);
+            }
         }
     };
 

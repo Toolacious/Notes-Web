@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchBox() {
     const classes = useStyles();
     const { usernotes, actions } = useContext(filecontext);
-    const { searchStr, setSearchStr, ref } = useContext(mainContext);
+    const { searchStr, setSearchStr } = useContext(mainContext);
     //const [searchStr, setSearchStr] = useState("");
     const [showingItem, setShowingItem] = useState([]);
 
@@ -80,10 +80,11 @@ export default function SearchBox() {
             <CssBaseline />
             <div style={{ display: "flex" }}>
                 <input
-                    ref={ref}
+                    id="searchbox"
                     className={classes.titlebar}
                     placeholder="Search files or tags"
                     onChange={search}
+                    value={searchStr}
                 />
             </div>
             <Divider style={{ height: "3px" }} />

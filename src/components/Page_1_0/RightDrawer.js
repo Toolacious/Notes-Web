@@ -71,9 +71,7 @@ export default function PersistentDrawerRight() {
     const classes = useStyles();
     const theme = useTheme();
     const { currentOpenFile, usernotes, actions } = useContext(filecontext);
-    const { setSearchStr, setOpen, setMode, handleRef } = useContext(
-        mainContext
-    );
+    const { setSearchStr, setOpen, setMode } = useContext(mainContext);
     const [r_open, setr_open] = useState(false);
     const [r_mode, setr_Mode] = useState("link");
 
@@ -138,7 +136,7 @@ export default function PersistentDrawerRight() {
         setSearchStr("tags: " + tag);
         setOpen(true);
         setMode("search");
-        handleRef(tag);
+        document.getElementById("searchbox").value = "tags: " + tag;
     };
 
     const handleLink = (id) => {
@@ -213,11 +211,15 @@ export default function PersistentDrawerRight() {
                                     <ListItemText
                                         primary={
                                             r_mode === "tag"
-                                                ? "# " +
-                                                  text[0].padEnd(20, ".") +
-                                                  text[1]
+                                                ? "# " + text[0]
                                                 : text[0]
                                         }
+                                    />
+                                    <ListItemText
+                                        primary={
+                                            r_mode === "tag" ? text[1] : ""
+                                        }
+                                        style={{ textAlign: "right" }}
                                     />
                                 </ListItem>
                                 <Divider />

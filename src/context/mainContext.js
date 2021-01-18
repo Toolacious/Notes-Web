@@ -7,8 +7,6 @@ const mainContext = createContext({
     setOpen: () => {},
     searchStr: String,
     setSearchStr: () => {},
-    ref: null,
-    handleRef: () => {},
 });
 
 export { mainContext };
