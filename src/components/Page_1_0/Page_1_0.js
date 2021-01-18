@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
@@ -35,6 +35,11 @@ const useStyles = makeStyles((theme) => ({
 export default function Page_1_0() {
     const classes = useStyles();
     const context = useContext(AuthContext);
+    const ref = useRef(null);
+    const handelRef = (tag) => {
+        ref.current.value = "tags: " + tag;
+        ref.current.focus();
+    };
     //const [openFiles, setopenFiles] = useState([]);
     //const [currentOpenFile, setcurrentOpenFile] = useState("");
     console.log(context);
@@ -88,7 +93,7 @@ export default function Page_1_0() {
                             alignItems: "stretch",
                         }}
                     >
-                        <PersistentDrawerLeft></PersistentDrawerLeft>
+                        <PersistentDrawerLeft>{ref}</PersistentDrawerLeft>
                         <div
                             style={{
                                 display: "flex",
@@ -100,7 +105,9 @@ export default function Page_1_0() {
                             <Main></Main>
                             <TagBar></TagBar>
                         </div>
-                        <PersistentDrawerRight></PersistentDrawerRight>
+                        <PersistentDrawerRight>
+                            {handelRef}
+                        </PersistentDrawerRight>
                     </main>
                 </filecontext.Provider>
             </Container>

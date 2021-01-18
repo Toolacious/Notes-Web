@@ -42,12 +42,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TagBar() {
     const classes = useStyles();
-    const {
-        currentOpenFile,
-        usernotes,
-        setcurrentOpenFile,
-        setuserNotes,
-    } = useContext(filecontext);
+    const { currentOpenFile, usernotes, setuserNotes } = useContext(
+        filecontext
+    );
     console.log(usernotes);
     const context = useContext(AuthContext);
     const [addtag] = useMutation(ADDTAG_Mutation);
@@ -97,6 +94,7 @@ export default function TagBar() {
                 .find((e) => e.id === currentOpenFile)
                 .tags.splice(chipToDelete, 1);
             setuserNotes(newnotes);
+            console.log("setusernote");
             deltag({
                 variables: {
                     id: currentOpenFile,
