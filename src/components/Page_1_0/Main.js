@@ -152,7 +152,7 @@ export default function Main() {
   useEffect(() => {
     for (let i = 0; i < pages.length; i++) {
       if (pages[i].id === currentOpenFile) {
-        handleCurrentPageIndex(i);
+        setCurrentPageIndex(i);
       }
     }
   }, [currentOpenFile]);
@@ -200,7 +200,6 @@ export default function Main() {
 
   const save = () => {
     let updPages = [...pages];
-
     // TODO: save to backend
     // save updPages[currentPageIndex].markdown to currentOpenFile's markdown
     updPages[currentPageIndex].unsaved = false;
