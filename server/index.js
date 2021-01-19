@@ -22,7 +22,7 @@ const server = new GraphQLServer({
 
 server.express.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: "http://localhost",
         credentials: true,
     })
 );
@@ -84,7 +84,7 @@ db.once("open", () => {
     server.start(
         {
             port: PORT,
-            cors: { credentials: true, origin: ["http://localhost:3000"] },
+            cors: { credentials: true, origin: ["http://localhost"] },
         },
         () => {
             console.log(`Listening on http://localhost:${PORT}`);

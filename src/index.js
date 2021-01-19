@@ -16,7 +16,7 @@ import { setAccessToken, getAccessToken } from "./accessToken";
 
 // Create an http link:
 const httpLink = createUploadLink({
-    uri: "http://localhost:4000/",
+    uri: "/graphql",
     credentials: "include",
 });
 
@@ -70,7 +70,7 @@ const RefreshLink = new TokenRefreshLink({
         }
     },
     fetchAccessToken: () => {
-        return fetch("http://localhost:4000/refresh_token", {
+        return fetch("/refresh_token", {
             method: "POST",
             credentials: "include",
         });
@@ -93,6 +93,7 @@ const errorLink = onError(({ graphQLErrors, networkError, errorMessage }) => {
 const client = new ApolloClient({
     link: ApolloLink.from([RefreshLink, errorLink, requestLink, httpLink]),
     cache: new InMemoryCache().restore({}),
+    uri: "",
 });
 
 const wrappedApp = (
