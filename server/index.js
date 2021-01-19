@@ -1,5 +1,5 @@
 require("dotenv-defaults").config();
-import { GraphQLServer, PubSub } from "graphql-yoga";
+import { GraphQLServer } from "graphql-yoga";
 import { Query } from "./resolvers/Query";
 import { Mutation } from "./resolvers/Mutations";
 import { User } from "./model/User";
@@ -7,6 +7,8 @@ import { Notes } from "./model/Notes";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
 import { verify } from "jsonwebtoken";
+import path from "path";
+import { static } from "express";
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -19,13 +21,18 @@ const server = new GraphQLServer({
     },
     context: (req) => ({ ...req, User, Notes }),
 });
-
+const PORT = process.env.PORT || 4000;
 server.express.use(
     cors({
-        origin: "http://localhost",
+        origin: `http://localhost:${PORT}`,
         credentials: true,
     })
 );
+
+server.express.use(static("public"));
+server.express.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "public", "index.html"));
+});
 
 server.express.use("/refresh_token", cookieParser());
 
@@ -79,22 +86,16 @@ db.on("error", (error) => {
 
 db.once("open", () => {
     console.log("MongoDB connected!");
-    const PORT = process.env.PORT || 4000;
 
-    try {
-        server.start(
-            {
-                port: PORT,
-                cors: {
-                    credentials: true,
-                    origin: ["https://notes-wep-app.herokuapp.com/"],
-                },
-            },
-            () => {
-                console.log(`Listening on http://localhost:${PORT}`);
-            }
-        );
-    } catch (err) {
-        console.log(err);
-    }
+    server.start(
+        {
+            port: PORT,
+            cors: { credentials: true, origin: [`http://localhost:${PORT}`] },
+            endpoint: "/graphql",
+            playground: "/graphql",
+        },
+        () => {
+            console.log(`Listening on http://localhost:${PORT}`);
+        }
+    );
 });

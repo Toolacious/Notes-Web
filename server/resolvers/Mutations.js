@@ -3,8 +3,6 @@ import { loginValidate } from "../validation";
 import { genSalt, compare, hash } from "bcryptjs";
 import { sendRefreshToken } from "../sendRefreshToken";
 import { createRefreshToken, createAccessToken } from "../auth";
-import { createWriteStream, createReadStream } from "fs";
-import { NoteSchema } from "../model/Notes";
 
 export const Mutation = {
     createUser: async (parent, args, { User, Notes }, info) => {
