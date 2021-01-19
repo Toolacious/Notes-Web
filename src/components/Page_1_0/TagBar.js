@@ -4,6 +4,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Chip from "@material-ui/core/Chip";
 import { Popover } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 
 import { filecontext } from "../../context/filetree";
 import { AuthContext } from "../../routes/auth";
@@ -36,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
             borderColor: theme.palette.text.primary,
         },
     },
+    alert: {
+        width: "256px",
+    },
 }));
 
 export default function TagBar() {
@@ -48,6 +52,14 @@ export default function TagBar() {
     const handleClose = () => {
         setAnchorEle(null);
     };
+    React.useEffect(() => {
+        if (anchorEle) {
+            console.log("ha");
+            setTimeout(function () {
+                setAnchorEle(null);
+            }, 1300); //1.3 Second delay
+        }
+    }, [anchorEle]);
     const open = Boolean(anchorEle);
     const id = open ? "simple-popover" : undefined;
 
@@ -96,7 +108,7 @@ export default function TagBar() {
         if (e.key === "Enter" && e.target.value !== "" && currentOpenFile) {
             try {
                 if (chipData.includes(tag)) {
-                    setAnchorEle(document.getElementById("taginput"));
+                    setAnchorEle(document.body);
                     return;
                 }
                 console.log(tag);
@@ -152,11 +164,13 @@ export default function TagBar() {
                         horizontal: "center",
                     }}
                     transformOrigin={{
-                        vertical: "bottom",
+                        vertical: "top",
                         horizontal: "center",
                     }}
                 >
-                    There's already a tag with the same name!
+                    <Alert className={classes.alert} severity="warning">
+                        Tag Already Exists!
+                    </Alert>
                 </Popover>
             </div>
         </>

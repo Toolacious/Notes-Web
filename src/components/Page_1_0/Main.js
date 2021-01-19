@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { filecontext } from "../../context/filetree";
 import clsx from "clsx";
-import PropTypes from "prop-types";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
@@ -319,6 +318,7 @@ export default function Main() {
                             pages[openFiles.indexOf(currentOpenFile)]
                                 .unsaved ? (
                                 <IconButton
+                                    id="saveMain"
                                     onClick={() => save(currentOpenFile)}
                                     classes={{
                                         root: classes.nopad,
@@ -386,8 +386,3 @@ export default function Main() {
         </div>
     );
 }
-
-Main.propTypes = {
-    posts: PropTypes.array,
-    title: PropTypes.string,
-};

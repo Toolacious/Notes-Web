@@ -39,6 +39,7 @@ export default function Page_1_0() {
     const { loading, error, data } = useQuery(NOTES_QUERY, {
         variables: { email: context.user.email },
     });
+
     //const [usernotes, setuserNotes] = useState([]);
     const {
         usernotes,

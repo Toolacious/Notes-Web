@@ -23,15 +23,24 @@ export default function RenameDialog(props) {
     const classes = useStyles();
     const { usernotes, actions } = useContext(filecontext);
     const [title, setTitle] = React.useState("");
+    const [valid, setValid] = React.useState(true);
+    const [helper, setHelper] = React.useState("");
+
+    const handleTitle = (val) => {
+        setTitle(val);
+        setValid(true);
+    };
 
     const handleCreate = () => {
         // check title validity
         if (!title) {
-            console.log("Empty");
+            setValid(false);
+            setHelper("empty name!");
             return;
         }
         if (usernotes.findIndex((notes) => notes.title === title) !== -1) {
-            console.log("Repeat");
+            setValid(false);
+            setHelper("name existed!");
             return;
         }
         actions.new(title);
@@ -44,11 +53,19 @@ export default function RenameDialog(props) {
             <DialogContent>
                 <TextField
                     autoFocus
+                    error={!valid}
+                    helperText={!valid ? helper : ""}
                     margin="dense"
                     id="createBox"
                     label="new name"
                     fullWidth
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={(e) => handleTitle(e.target.value)}
+                    onKeyDown={(e) => {
+                        e.preventDefault();
+                        if (e.key === "Enter") {
+                            handleCreate();
+                        }
+                    }}
                 />
             </DialogContent>
             <DialogActions>

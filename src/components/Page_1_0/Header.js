@@ -55,7 +55,15 @@ export default function Header() {
                     setOpenNewDialog(true);
                 },
             },
-            { name: "Close", func: () => {} },
+            {
+                name: "Save",
+                func: () => {
+                    let saveButton = document.getElementById("saveMain");
+                    if (saveButton) {
+                        saveButton.click();
+                    }
+                },
+            },
         ],
     };
 

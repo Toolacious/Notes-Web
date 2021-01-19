@@ -103,6 +103,11 @@ export default function TreeMenu(props) {
                             setOpenRenameDialog(true);
                             setAnchorEl(null);
                         }}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                            }
+                        }}
                     >
                         Rename
                     </MenuItem>

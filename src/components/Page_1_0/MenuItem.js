@@ -1,8 +1,9 @@
-import React from 'react';
+import React from "react";
+import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Button from "@material-ui/core/Button";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme) => ({
     menubarButton: {
@@ -13,12 +14,17 @@ const useStyles = makeStyles((theme) => ({
         paddingRight: theme.spacing(1),
         flexShrink: 0,
 
-        textTransform: "none"
+        textTransform: "none",
     },
     menuItem: {
         fontSize: "14px",
         width: "128px",
-    }
+    },
+    disabledMenuItem: {
+        cursor: "default",
+        color: "rgb(180, 180, 180)!important",
+        backgroundColor: "white!important",
+    },
 }));
 
 export default function SimpleMenu(props) {
@@ -32,7 +38,17 @@ export default function SimpleMenu(props) {
 
     return (
         <div>
-            <Button className={classes.menubarButton} aria-controls="name" aria-haspopup="true" onClick={handleClick}>
+            <Button
+                className={classes.menubarButton}
+                aria-controls="name"
+                aria-haspopup="true"
+                onClick={handleClick}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                    }
+                }}
+            >
                 {name}
             </Button>
             <Menu
@@ -43,32 +59,26 @@ export default function SimpleMenu(props) {
                 transformOrigin={{ vertical: "top", horizontal: "left" }}
                 keepMounted
                 open={Boolean(anchorEl)}
-                onClose={()=>{setAnchorEl(null);}}
-            >   
+                onClose={() => {
+                    setAnchorEl(null);
+                }}
+            >
                 {sections.map((section) => (
-                    <MenuItem 
-                        className={classes.menuItem}
+                    <MenuItem
+                        className={clsx(classes.menuItem, {
+                            [classes.disabledMenuItem]:
+                                section.name === "Save" &&
+                                !document.getElementById("saveMain"),
+                        })}
                         onClick={() => {
                             section.func();
                             setAnchorEl(null);
                         }}
-                    >{section.name}</MenuItem>
+                    >
+                        {section.name}
+                    </MenuItem>
                 ))}
             </Menu>
         </div>
     );
 }
-/*
- aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}
- <Menu
-                id="simple-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
-            </Menu>
- */
