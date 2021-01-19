@@ -81,13 +81,20 @@ db.once("open", () => {
     console.log("MongoDB connected!");
     const PORT = process.env.port || 4000;
 
-    server.start(
-        {
-            port: PORT,
-            cors: { credentials: true, origin: ["http://localhost"] },
-        },
-        () => {
-            console.log(`Listening on http://localhost:${PORT}`);
-        }
-    );
+    try {
+        server.start(
+            {
+                port: PORT,
+                cors: {
+                    credentials: true,
+                    origin: ["https://notes-wep-app.herokuapp.com/"],
+                },
+            },
+            () => {
+                console.log(`Listening on http://localhost:${PORT}`);
+            }
+        );
+    } catch (err) {
+        console.log(err);
+    }
 });
