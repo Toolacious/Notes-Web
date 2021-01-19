@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -8,6 +8,8 @@ import SimpleMenu from "./MenuItem";
 import AccountDialog from "./AccountDialog";
 import NewDialog from "./NewDialog";
 import icon from "../../icons/icon.jpg";
+import user from "../../icons/avatar.png";
+import { AvatarContext } from "../../context/avatarContext";
 
 const useStyles = makeStyles((theme) => ({
     headerWrapper: {
@@ -45,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
     const classes = useStyles();
     const [openNewDialog, setOpenNewDialog] = React.useState(false);
+    const { avatar, setAvatar } = useContext(AvatarContext);
 
     const file_menu = {
         name: "File",
@@ -94,7 +97,7 @@ export default function Header() {
                 <IconButton>
                     <SettingsIcon fontSize="large" />
                 </IconButton>
-                <AccountDialog src={icon}></AccountDialog>
+                <AccountDialog src={avatar ? avatar : user}></AccountDialog>
             </Box>
         </React.Fragment>
     );

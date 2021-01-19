@@ -36,9 +36,8 @@ const UserSchema = new mongoose.Schema({
         default: Date.now,
     },
     img: {
-        data: Buffer,
-        contentType: String,
-        require: false,
+        type: String,
+        default: "",
     },
 });
 

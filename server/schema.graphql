@@ -1,9 +1,8 @@
-scalar Upload
-
 type Query {
     users(query: String): [User!]!
     user(query: ID): User
     usernotes(email: String!): [note]!
+    userAvatar(id: String!): String!
 }
 
 type Mutation {
@@ -11,18 +10,12 @@ type Mutation {
     clearMessages(query: String): ClearMessage!
     login(data: LoginInput!): Token!
     logout: Boolean!
-    signS3(filename: String!, filetype: String!): S3Payload!
-    upload(picture: Upload): Boolean!
+    upload(id: String!, picture: String!): Boolean!
     createNote(data: newNoteInput!): note!
     updateNote(data: updateNoteInput!): Boolean!
     deleteNote(id: String!, email: String!): Boolean!
     addtag(id: String!, email: String!, tag: String!): Boolean!
     deletetag(index: Int!, id: String!, email: String!): Boolean!
-}
-
-type S3Payload {
-    signedRequest: String!
-    url: String!
 }
 
 type Subscription {

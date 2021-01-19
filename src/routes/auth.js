@@ -7,7 +7,6 @@ const initialState = {
 };
 
 if (getAccessToken()) {
-    console.log("GETGET");
     const decodedToken = jwtDecode(getAccessToken());
     initialState.user = decodedToken;
 }

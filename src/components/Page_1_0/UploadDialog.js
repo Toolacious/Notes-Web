@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
+import Crop from "./crop";
 
 import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
@@ -53,23 +53,7 @@ export default function UploadDialog(props) {
             aria-labelledby="avatarUpload"
         >
             <DialogTitle id="avatarUpload">Upload Avatar</DialogTitle>
-            <div style={{ height: "60vh", width: "60vw" }}></div>
-            <DialogActions>
-                <Button
-                    className={classes.dialogButton}
-                    onClick={() => {}}
-                    color="primary"
-                >
-                    Upload
-                </Button>
-                <Button
-                    className={classes.dialogButton}
-                    onClick={() => {}}
-                    color="primary"
-                >
-                    Save
-                </Button>
-            </DialogActions>
+            <Crop />
         </Dialog>
     );
 }

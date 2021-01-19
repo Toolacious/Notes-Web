@@ -3,27 +3,8 @@ import { loginValidate } from "../validation";
 import { genSalt, compare, hash } from "bcryptjs";
 import { sendRefreshToken } from "../sendRefreshToken";
 import { createRefreshToken, createAccessToken } from "../auth";
-import * as shortid from "shortid";
-import { createWriteStream } from "fs";
+import { createWriteStream, createReadStream } from "fs";
 import { NoteSchema } from "../model/Notes";
-
-const storeUpload = async ({ stream }) => {
-    const id = shortid.generate();
-    const path = `images/${id}`;
-
-    return new Promise((resolve, reject) =>
-        stream
-            .pipe(createWriteStream(path))
-            .on("finish", () => resolve({ id, path }))
-            .on("error", reject)
-    );
-};
-
-const processUpload = async (upload) => {
-    const { stream, filename } = await upload;
-    const { id } = await storeUpload({ stream, filename });
-    return id;
-};
 
 export const Mutation = {
     createUser: async (parent, args, { User, Notes, pubsub }, info) => {
@@ -102,32 +83,11 @@ export const Mutation = {
 
         return true;
     },
-    signS3: async (parent, { filename, filetype }, info) => {
-        // AWS_ACCESS_KEY_ID
-        // AWS_SECRET_ACCESS_KEY
-        const s3 = new aws.S3({
-            signatureVersion: "v4",
-            region: "us-east-2",
-        });
 
-        const s3Params = {
-            Bucket: s3Bucket,
-            Key: filename,
-            Expires: 60,
-            ContentType: filetype,
-            ACL: "public-read",
-        };
-
-        const signedRequest = await s3.getSignedUrl("putObject", s3Params);
-        const url = `https://${s3Bucket}.s3.amazonaws.com/${filename}`;
-
-        return {
-            signedRequest,
-            url,
-        };
-    },
-    upload: async (parent, { picture }, info) => {
-        const pictureUrl = await processUpload(picture);
+    upload: async (parent, { id, picture }, { User }, info) => {
+        const user = await User.findOne({ _id: id });
+        user.set({ img: picture });
+        await user.save();
         return true;
     },
     createNote: async (parent, args, { Notes, pubsub }, info) => {
@@ -158,12 +118,11 @@ export const Mutation = {
         try {
             const { id, email, title, markdown, tags, links } = args.data;
             const notes = await Notes.findOne({ email });
-            if (!title && !tags) {
+            if (markdown && links.length >= 0) {
                 notes.notes.id(id).set({ markdown, links });
             } else {
                 notes.notes.id(id).set({ title });
             }
-
             await notes.save();
             // pubsub.publish("note", {
             //     note: {

@@ -132,7 +132,6 @@ export default function PersistentDrawerRight() {
         setSearchStr("tags: " + tag);
         setOpen(true);
         setMode("search");
-        document.getElementById("searchbox").value = "tags: " + tag;
     };
 
     const handleLink = (id) => {
