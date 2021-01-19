@@ -79,7 +79,7 @@ db.on("error", (error) => {
 
 db.once("open", () => {
     console.log("MongoDB connected!");
-    const PORT = process.env.port || 4000;
+    const PORT = process.env.PORT || 4000;
 
     try {
         server.start(
