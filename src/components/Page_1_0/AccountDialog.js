@@ -10,7 +10,8 @@ import { LOGOUT_Mutation } from "../../graphql/logout";
 import { AuthContext } from "../../routes/auth";
 import { getAccessToken, setAccessToken } from "../../accessToken";
 
-//const emails = ['username@gmail.com', 'user02@gmail.com'];
+import UploadDialog from "./UploadDialog";
+
 const useStyles = makeStyles((theme) => ({
     avatar: {
         height: "128px",
@@ -47,7 +48,7 @@ function SimpleDialog(props) {
     const history = useHistory();
     const [logout] = useMutation(LOGOUT_Mutation);
 
-    const { onClose, selectedValue, open, avatar_src } = props;
+    const { onClose, onOpen, selectedValue, open, avatar_src } = props;
 
     const handleClose = () => {
         onClose(selectedValue);
@@ -68,7 +69,9 @@ function SimpleDialog(props) {
                     alt="avatar"
                 ></img>
             </div>
-            <Button className={classes.dialogButton}>Change avatar</Button>
+            <Button onClick={onOpen} className={classes.dialogButton}>
+                Change avatar
+            </Button>
             <Button
                 className={classes.dialogButton}
                 onClick={async (e) => {
@@ -90,6 +93,7 @@ function SimpleDialog(props) {
 export default function AccountDialog(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [uploadOpen, setUploadOpen] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState(0);
 
     const handleClickOpen = () => {
@@ -99,6 +103,10 @@ export default function AccountDialog(props) {
     const handleClose = (value) => {
         setOpen(false);
         setSelectedValue(value);
+    };
+
+    const handleUploadClose = () => {
+        setUploadOpen(false);
     };
 
     return (
@@ -113,7 +121,18 @@ export default function AccountDialog(props) {
                 selectedValue={selectedValue}
                 open={open}
                 onClose={handleClose}
+                onOpen={() => {
+                    handleClose();
+                    setUploadOpen(true);
+                }}
                 avatar_src={props.src}
+            />
+            <UploadDialog
+                open={uploadOpen}
+                onClose={() => {
+                    handleUploadClose();
+                    handleClickOpen();
+                }}
             />
         </div>
     );
