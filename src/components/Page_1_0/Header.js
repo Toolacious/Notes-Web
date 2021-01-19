@@ -12,6 +12,7 @@ import Link from "@material-ui/core/Link";
 
 import SimpleMenu from "./MenuItem";
 import AccountDialog from "./AccountDialog";
+import NewDialog from "./NewDialog";
 import icon from "../../icons/icon.jpg";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,19 +48,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const new_project = () => {};
-
-const file_menu = {
-    name: "File",
-    sections: [
-        { name: "New", func: new_project },
-        { name: "Close", func: () => {} },
-    ],
-};
-
-export default function Header(props) {
+export default function Header() {
     const classes = useStyles();
-    const { sections, title } = props;
+    const [openNewDialog, setOpenNewDialog] = React.useState(false);
+
+    const file_menu = {
+        name: "File",
+        sections: [
+            {
+                name: "New",
+                func: () => {
+                    setOpenNewDialog(true);
+                },
+            },
+            { name: "Close", func: () => {} },
+        ],
+    };
 
     return (
         <React.Fragment>
@@ -76,6 +80,13 @@ export default function Header(props) {
                         className={classes.menubar}
                     >
                         <SimpleMenu menu={file_menu}></SimpleMenu>
+                        {openNewDialog ? (
+                            <NewDialog
+                                closeFunc={() => {
+                                    setOpenNewDialog(false);
+                                }}
+                            ></NewDialog>
+                        ) : null}
                     </Toolbar>
                 </Box>
                 <IconButton>
@@ -86,8 +97,3 @@ export default function Header(props) {
         </React.Fragment>
     );
 }
-
-Header.propTypes = {
-    sections: PropTypes.array,
-    title: PropTypes.string,
-};

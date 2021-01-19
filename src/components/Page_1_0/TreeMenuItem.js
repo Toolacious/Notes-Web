@@ -6,9 +6,11 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-
 import FolderIcon from "@material-ui/icons/Folder";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
+
+import RenameDialog from "./RenameDialog";
+import DeleteDialog from "./DeleteDialog";
 
 const useStyles = makeStyles((theme) => ({
     labelIcon: {
@@ -32,11 +34,14 @@ export default function TreeMenu(props) {
     const classes = useStyles();
     const node = props.node;
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [openRenameDialog, setOpenRenameDialog] = React.useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const data = useContext(filecontext);
     const { actions } = data;
 
     const handleClick = (event) => {
         event.preventDefault();
+        console.log(event.currentTarget);
         setAnchorEl(event.currentTarget);
     };
 
@@ -48,13 +53,16 @@ export default function TreeMenu(props) {
                     display: "flex",
                     alignItems: "center",
                     position: "relative",
-                    cursor: "context-menu",
                 }}
-                aria-controls="name"
-                aria-haspopup="true"
                 onClick={(e) => {
+                    console.log(e.button);
                     if (e.button === 0) {
+                        console.log(e.currentTarget);
+                        console.log("it should go here");
+
                         actions.open(node.id);
+                        if (document.getElementsByClassName("input")[0])
+                            document.getElementsByClassName("input")[0].focus();
                     } else if (e.button === 2) {
                         handleClick();
                     }
@@ -76,37 +84,53 @@ export default function TreeMenu(props) {
                     {node.title}
                 </Typography>
             </div>
-            <Menu
-                id="name"
-                anchorEl={anchorEl}
-                getContentAnchorEl={null}
-                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-                transformOrigin={{ vertical: "top", horizontal: "left" }}
-                keepMounted
-                open={Boolean(anchorEl)}
-                onClose={() => {
-                    setAnchorEl(null);
-                }}
-            >
-                <MenuItem
-                    className={classes.menuItem}
-                    onClick={() => {
-                        actions.rename(node.id, "ha");
+            {node.type !== "dir" ? (
+                <Menu
+                    id="name"
+                    anchorEl={anchorEl}
+                    getContentAnchorEl={null}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                    transformOrigin={{ vertical: "top", horizontal: "left" }}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={() => {
                         setAnchorEl(null);
                     }}
+                    autoFocus={false}
                 >
-                    Rename
-                </MenuItem>
-                <MenuItem
-                    className={classes.menuItem}
-                    onClick={() => {
-                        actions.delete(node.id);
-                        setAnchorEl(null);
-                    }}
-                >
-                    Delete
-                </MenuItem>
-            </Menu>
+                    <MenuItem
+                        className={classes.menuItem}
+                        onClick={() => {
+                            setOpenRenameDialog(true);
+                            setAnchorEl(null);
+                        }}
+                    >
+                        Rename
+                    </MenuItem>
+                    <MenuItem
+                        className={classes.menuItem}
+                        onClick={() => {
+                            setOpenDeleteDialog(true);
+                            setAnchorEl(null);
+                        }}
+                    >
+                        Delete
+                    </MenuItem>
+                </Menu>
+            ) : null}
+            {openRenameDialog ? (
+                <RenameDialog
+                    fileID={node.id}
+                    closeFunc={() => setOpenRenameDialog(false)}
+                ></RenameDialog>
+            ) : null}
+            {openDeleteDialog ? (
+                <DeleteDialog
+                    fileID={node.id}
+                    title={node.title}
+                    closeFunc={() => setOpenDeleteDialog(false)}
+                ></DeleteDialog>
+            ) : null}
         </div>
     );
 }

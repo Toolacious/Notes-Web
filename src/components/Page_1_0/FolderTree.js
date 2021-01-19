@@ -78,11 +78,6 @@ export default function FolderTree() {
         <TreeItem
             key={node.id}
             nodeId={node.id}
-            onClick={(e) => {
-                actions.open(node.id);
-                if (document.getElementsByClassName("input")[0])
-                    document.getElementsByClassName("input")[0].focus();
-            }}
             label={<TreeMenu node={node}></TreeMenu>}
             classes={{
                 root: classes.colorWhite1,
@@ -95,18 +90,20 @@ export default function FolderTree() {
     );
 
     return (
-        <TreeView
-            className={classes.root}
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpanded={["root"]}
-            defaultExpandIcon={<ChevronRightIcon />}
-        >
-            {renderTree({
-                ...data,
-                id: "root",
-                title: context.user.name,
-                type: "dir",
-            })}
-        </TreeView>
+        <>
+            <TreeView
+                className={classes.root}
+                defaultCollapseIcon={<ExpandMoreIcon />}
+                defaultExpanded={["root"]}
+                defaultExpandIcon={<ChevronRightIcon />}
+            >
+                {renderTree({
+                    ...data,
+                    id: "root",
+                    title: context.user.name,
+                    type: "dir",
+                })}
+            </TreeView>
+        </>
     );
 }

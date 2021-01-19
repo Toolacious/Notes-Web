@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import PropTypes from "prop-types";
+import { filecontext } from "../../context/filetree";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
@@ -16,24 +17,32 @@ const useStyles = makeStyles((theme) => ({
     dialog: {},
 }));
 
-export default function SaveDialog(props) {
+export default function DeleteDialog(props) {
     const classes = useStyles();
-    const { updFunc, closeFunc } = props.func;
+    const { actions } = useContext(filecontext);
 
     return (
-        <Dialog open={true} aria-labelledby="save-dialog-title">
-            <DialogTitle id="save-dialog-title">Save File?</DialogTitle>
+        <Dialog
+            open={true}
+            aria-labelledby={`delete-dialog-title_${props.fileID}`}
+        >
+            <DialogTitle id={`delete-dialog-title_${props.fileID}`}>
+                {`Delete ${props.title}?`}
+            </DialogTitle>
             <DialogActions>
                 <Button
                     className={classes.dialogButton}
-                    onClick={updFunc}
+                    onClick={() => {
+                        actions.delete(props.fileID);
+                        props.closeFunc();
+                    }}
                     color="primary"
                 >
                     Yes
                 </Button>
                 <Button
                     className={classes.dialogButton}
-                    onClick={closeFunc}
+                    onClick={props.closeFunc}
                     color="primary"
                 >
                     No

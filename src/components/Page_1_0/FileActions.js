@@ -1,8 +1,9 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useContext } from "react";
 import { ADDNOTE_Mutation } from "../../graphql/createNote";
 import { DELNOTE_Mutation } from "../../graphql/deleteNote";
 import { UPDNOTE_Mutation } from "../../graphql/updateNote";
 import { useMutation } from "@apollo/react-hooks";
+import { AuthContext } from "../../routes/auth";
 
 function actionReducer(state, action) {
     let updOpenFiles = [];
@@ -97,6 +98,9 @@ function FileActions(initialState) {
     const [newNote] = useMutation(ADDNOTE_Mutation);
     const [delNote] = useMutation(DELNOTE_Mutation);
     const [updNote] = useMutation(UPDNOTE_Mutation);
+    const {
+        user: { email },
+    } = useContext(AuthContext);
 
     function setUserNotes(data) {
         dispatch({
@@ -125,7 +129,7 @@ function FileActions(initialState) {
             },
         });
     }
-    async function newFile(email, title) {
+    async function newFile(title) {
         try {
             const a = await newNote({
                 variables: {
@@ -163,7 +167,7 @@ function FileActions(initialState) {
             id: id,
         });
     }
-    async function renameFile(id, email, title) {
+    async function renameFile(id, title) {
         try {
             await updNote({ variables: { id, email, title } });
             let data = [...state.usernotes];
@@ -178,7 +182,7 @@ function FileActions(initialState) {
             console.log(error);
         }
     }
-    async function deleteFile(id, email) {
+    async function deleteFile(id) {
         // TODO: delete file in backend, return new usernotes data
         try {
             await delNote({ variables: { id, email } });
