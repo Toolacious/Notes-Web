@@ -11,7 +11,6 @@ function actionReducer(state, action) {
 
     switch (action.type) {
         case "SET":
-            console.log(action.updData);
             return action.updData;
         case "NEW":
             return {

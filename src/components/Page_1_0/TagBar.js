@@ -54,7 +54,6 @@ export default function TagBar() {
     };
     React.useEffect(() => {
         if (anchorEle) {
-            console.log("ha");
             setTimeout(function () {
                 setAnchorEle(null);
             }, 1300); //1.3 Second delay
@@ -91,7 +90,6 @@ export default function TagBar() {
                 .find((e) => e.id === currentOpenFile)
                 .tags.splice(chipToDelete, 1);
             setuserNotes(newnotes);
-            console.log("setusernote");
             await deltag({
                 variables: {
                     id: currentOpenFile,
@@ -111,7 +109,6 @@ export default function TagBar() {
                     setAnchorEle(document.body);
                     return;
                 }
-                console.log(tag);
                 let newnotes = [...usernotes];
                 newnotes.find((e) => e.id === currentOpenFile).tags.push(tag);
                 setuserNotes(newnotes);

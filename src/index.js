@@ -27,18 +27,15 @@ const requestLink = new ApolloLink(
             Promise.resolve(operation)
                 .then((operation) => {
                     const accessToken = getAccessToken();
-                    console.log("request----" + accessToken);
                     if (accessToken) {
-                        console.log("set header");
                         operation.setContext({
                             headers: {
                                 authorization: `bearer ${accessToken}`,
                             },
                         });
-                    } else console.log("no access token");
+                    }
                 })
                 .then(() => {
-                    console.log(operation.getContext().headers);
                     handle = forward(operation).subscribe({
                         next: observer.next.bind(observer),
                         error: observer.error.bind(observer),
@@ -57,9 +54,7 @@ const RefreshLink = new TokenRefreshLink({
     accessTokenField: "accessToken",
     isTokenValidOrUndefined: () => {
         const token = getAccessToken();
-        console.log("Refresh----" + token);
         if (!token) {
-            console.log("no found_refresh");
             return true;
         }
 
@@ -81,7 +76,6 @@ const RefreshLink = new TokenRefreshLink({
         });
     },
     handleFetch: (accessToken) => {
-        console.log("access token seting");
         console.log(accessToken);
         setAccessToken(accessToken);
     },

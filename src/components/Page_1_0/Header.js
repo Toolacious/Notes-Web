@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
     const classes = useStyles();
     const [openNewDialog, setOpenNewDialog] = React.useState(false);
-    const { avatar, setAvatar } = useContext(AvatarContext);
+    const { avatar } = useContext(AvatarContext);
 
     const file_menu = {
         name: "File",

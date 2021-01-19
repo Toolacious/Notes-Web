@@ -2,7 +2,6 @@ require("dotenv-defaults").config();
 import { GraphQLServer, PubSub } from "graphql-yoga";
 import { Query } from "./resolvers/Query";
 import { Mutation } from "./resolvers/Mutations";
-import { Subscription } from "./resolvers/Subscription";
 import { User } from "./model/User";
 import { Notes } from "./model/Notes";
 import { createAccessToken, createRefreshToken } from "./auth";
@@ -12,15 +11,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
-const pubsub = new PubSub();
 const server = new GraphQLServer({
     typeDefs: "./server/schema.graphql",
     resolvers: {
         Query,
         Mutation,
-        Subscription,
     },
-    context: (req) => ({ ...req, User, pubsub, Notes }),
+    context: (req) => ({ ...req, User, Notes }),
 });
 
 server.express.use(
@@ -35,14 +32,12 @@ server.express.use("/refresh_token", cookieParser());
 server.express.post("/refresh_token", async (req, res) => {
     const token = req.cookies.jid;
     if (!token) {
-        console.log("No token");
         return res.send({ ok: false, accessToken: "" });
     }
 
     let payload = null;
     try {
         payload = verify(token, process.env.REFRESH_TOKEN_SECRET);
-        console.log(payload);
     } catch (err) {
         console.log(err);
         return res.send({ ok: false, accessToken: "" });
@@ -53,12 +48,10 @@ server.express.post("/refresh_token", async (req, res) => {
     const user = await User.findOne({ _id: payload.userId });
 
     if (!user) {
-        console.log("No user");
         return res.send({ ok: false, accessToken: "" });
     }
 
     if (user.tokenVersion !== payload.tokenVersion) {
-        console.log("token version not right");
         return res.send({ ok: false, accessToken: "" });
     }
 

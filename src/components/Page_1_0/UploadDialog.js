@@ -1,15 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import Crop from "./crop";
-
-import { useHistory } from "react-router-dom";
-import { useMutation } from "@apollo/react-hooks";
-import { LOGOUT_Mutation } from "../../graphql/logout";
-import { AuthContext } from "../../routes/auth";
-import { getAccessToken, setAccessToken } from "../../accessToken";
 
 const useStyles = makeStyles((theme) => ({
     avatar: {

@@ -7,7 +7,7 @@ import { createWriteStream, createReadStream } from "fs";
 import { NoteSchema } from "../model/Notes";
 
 export const Mutation = {
-    createUser: async (parent, args, { User, Notes, pubsub }, info) => {
+    createUser: async (parent, args, { User, Notes }, info) => {
         try {
             // validate
             const { error } = registerValidate(args.data);
@@ -36,12 +36,6 @@ export const Mutation = {
                 notes: [],
             });
             await notes.save();
-            pubsub.publish("message", {
-                message: {
-                    mutation: "CREATED",
-                    data: [saveMessage],
-                },
-            });
             return saveMessage;
         } catch (err) {
             console.log(err);
@@ -90,7 +84,7 @@ export const Mutation = {
         await user.save();
         return true;
     },
-    createNote: async (parent, args, { Notes, pubsub }, info) => {
+    createNote: async (parent, args, { Notes }, info) => {
         try {
             const { email, title, markdown, tags, links } = args.data;
             const notes = await Notes.findOne({ email });
@@ -101,52 +95,33 @@ export const Mutation = {
                 links,
             });
             const update = await notes.save();
-            // console.log(update.notes[update.notes.length - 1])
-            // pubsub.publish("note", {
-            //     note: {
-            //         mutation: "CREATED",
-            //         data: update.notes[update.notes.length - 1],
-            //     },
-            // });
             return update.notes[update.notes.length - 1];
         } catch (err) {
             console.log(err);
             return err;
         }
     },
-    updateNote: async (parent, args, { Notes, pubsub }, info) => {
+    updateNote: async (parent, args, { Notes }, info) => {
         try {
-            const { id, email, title, markdown, tags, links } = args.data;
+            const { id, email, title, markdown, links } = args.data;
             const notes = await Notes.findOne({ email });
-            if (markdown && links.length >= 0) {
+            if (markdown || links.length >= 0) {
                 notes.notes.id(id).set({ markdown, links });
             } else {
                 notes.notes.id(id).set({ title });
             }
             await notes.save();
-            // pubsub.publish("note", {
-            //     note: {
-            //         mutation: "UPDATED",
-            //         data: notes.notes.id(id),
-            //     },
-            // });
             return true;
         } catch (err) {
             console.log(err);
             return err;
         }
     },
-    deleteNote: async (parent, { id, email }, { Notes, pubsub }, info) => {
+    deleteNote: async (parent, { id, email }, { Notes }, info) => {
         try {
             const notes = await Notes.findOne({ email });
             notes.notes.id(id).remove();
             await notes.save();
-            // pubsub.publish("note", {
-            //     note: {
-            //         mutation: "DELETED",
-            //         data: null,
-            //     },
-            // });
             return true;
         } catch (err) {
             console.log(err);

@@ -3,7 +3,6 @@ export const Query = {
         try {
             if (!args.query) {
                 const data = await User.find({});
-                console.log(data);
                 return data;
             }
             const data = User.findOne({ name: { $regex: args.query } });
@@ -19,7 +18,6 @@ export const Query = {
                 return data;
             }
             const data = await User.findOne({ _id: args.query });
-            if (data) console.log(data[0].name + " welcome!");
             return data[0];
         } catch (err) {
             console.log(err);

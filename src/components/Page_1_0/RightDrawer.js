@@ -78,16 +78,17 @@ export default function PersistentDrawerRight() {
             if (currentOpenFile) {
                 let title = usernotes.find((e) => e.id === currentOpenFile)
                     .title;
-                let alllinks = [];
+                let alllinks = {};
                 usernotes.forEach((e) => {
                     e.links.forEach((ele) => {
                         if (ele === title) {
-                            alllinks.push([e.title, e.id]);
+                            if (!Object.keys(alllinks).includes(e.title)) {
+                                alllinks[e.title] = e.id;
+                            }
                         }
                     });
                 });
-                console.log("setlink");
-                setLink(alllinks);
+                setLink(Object.entries(alllinks));
             }
         } catch (error) {
             console.log(error);
@@ -108,14 +109,11 @@ export default function PersistentDrawerRight() {
                 }
             });
         });
-        console.log("settag");
         setTag(Object.entries(alltags));
-        console.log(Object.entries(alltags));
         return () => {};
     }, [usernotes]);
     const [showingItem, setShowingItem] = useState([]);
     useEffect(() => {
-        console.log("setshowingItem");
         setShowingItem(r_mode === "link" ? links : tags);
         return () => {};
     }, [r_mode, links, tags]);

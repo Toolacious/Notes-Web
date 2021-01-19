@@ -201,15 +201,13 @@ export default function Main() {
 
     const save = async (fileID) => {
         let currentPageIndex = openFiles.indexOf(fileID);
-        const { id, title, markdown, tags, links, unsaved } = pages[
-            currentPageIndex
-        ];
+        const { id, title, markdown, tags, unsaved } = pages[currentPageIndex];
         if (unsaved) {
             try {
                 const regex = /\[\[(\w*?)\]\]/gm;
                 const str = markdown;
                 let g;
-                let link = [];
+                let links = [];
                 while ((g = regex.exec(str)) !== null) {
                     // This is necessary to avoid infinite loops with zero-width matches
                     if (g.index === regex.lastIndex) {
@@ -221,14 +219,11 @@ export default function Main() {
                         console.log(
                             `Found match, group ${groupIndex}: ${match}`
                         );
-                        if (groupIndex === 1) link.push(match);
+                        if (groupIndex === 1) links.push(match);
                     });
                 }
                 let newPages = [...pages];
-                newPages[currentPageIndex].links = link;
-                await updNote({
-                    variables: { id, email, title, markdown, tags, links },
-                });
+                newPages[currentPageIndex].links = links;
                 actions.save(fileID, {
                     id,
                     title,
@@ -238,6 +233,9 @@ export default function Main() {
                 });
                 newPages[currentPageIndex].unsaved = false;
                 setPages(newPages);
+                await updNote({
+                    variables: { id, email, markdown, links },
+                });
             } catch (err) {
                 console.log(err);
             }

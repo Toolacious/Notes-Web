@@ -18,12 +18,6 @@ type Mutation {
     deletetag(index: Int!, id: String!, email: String!): Boolean!
 }
 
-type Subscription {
-    message: MessageSubscriptionPayload!
-    note: NoteSubscriptionPayload!
-    errors: ErrorMessageSubscriptionPayload!
-}
-
 input CreateUserInput {
     fname: String!
     lname: String!

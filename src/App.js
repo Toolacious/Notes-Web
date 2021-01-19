@@ -17,8 +17,6 @@ function App() {
             credentials: "include",
         }).then(async (res) => {
             const data = await res.json();
-            console.log("app----");
-            console.log(data);
             if (data.accessToken) {
                 setAccessToken(data.accessToken);
                 const { userId, name, email } = decode(data.accessToken);
