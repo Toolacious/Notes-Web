@@ -6,6 +6,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { setAccessToken } from "./accessToken";
 import { AuthContext } from "./routes/auth";
 import decode from "jwt-decode";
+import Loading from "./routes/loading";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -34,7 +35,13 @@ function App() {
     }, []);
     return (
         <div className="App">
-            <Router>{loading ? <div>loading...</div> : <Routes />}</Router>
+            <Router>
+                {loading ? (
+                    <Loading type="spinningBubbles" color="ffffff" />
+                ) : (
+                    <Routes />
+                )}
+            </Router>
         </div>
     );
 }

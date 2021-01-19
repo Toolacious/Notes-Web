@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import { filecontext } from "../../context/filetree";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -10,7 +9,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     dialogButton: {
         width: "256px",
         fontSize: "18px",

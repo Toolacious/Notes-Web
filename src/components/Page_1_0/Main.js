@@ -1,12 +1,10 @@
-import React, { useContext, useCallback, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { filecontext } from "../../context/filetree";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 
 import Chip from "@material-ui/core/Chip";
@@ -20,7 +18,6 @@ import Markdown from "./Markdown";
 import { useMutation } from "@apollo/react-hooks";
 import { UPDNOTE_Mutation } from "../../graphql/updateNote";
 import { AuthContext } from "../../routes/auth";
-import { CallReceived } from "@material-ui/icons";
 
 const pageBarHeight = 24;
 const useStyles = makeStyles((theme) => ({
@@ -128,15 +125,9 @@ export default function Main() {
     } = useContext(AuthContext);
     const classes = useStyles();
     const theme = useTheme();
-    const {
-        usernotes,
-        openFiles,
-        currentOpenFile,
-        setuserNotes,
-        setopenFiles,
-        setcurrentOpenFile,
-        actions,
-    } = useContext(filecontext);
+    const { usernotes, openFiles, currentOpenFile, actions } = useContext(
+        filecontext
+    );
 
     const [mode, setMode] = React.useState("main");
     const [pageNum, setPageNum] = React.useState(0);
@@ -262,25 +253,29 @@ export default function Main() {
             ) : (
                 <>
                     <div className={classes.pageBar}>
-                        {pages.map((page, index) => {
+                        {openFiles.map((fileID, index) => {
                             return (
                                 <li key={index}>
                                     <Chip
                                         size="small"
-                                        label={page.title}
+                                        label={
+                                            usernotes.find(
+                                                (e) => e.id === fileID
+                                            ).title
+                                        }
                                         disableRipple={true}
                                         onClick={(e) => {
-                                            actions.open(page.id);
+                                            actions.open(fileID);
                                             document
                                                 .getElementsByClassName(
                                                     "input"
                                                 )[0]
                                                 .focus();
                                         }}
-                                        onDelete={() => handleDelete(page.id)}
+                                        onDelete={() => handleDelete(fileID)}
                                         className={clsx(classes.chip, {
                                             [classes.chipFocus]:
-                                                page.id === currentOpenFile,
+                                                fileID === currentOpenFile,
                                         })}
                                         classes={{
                                             root: classes.chipRoot,

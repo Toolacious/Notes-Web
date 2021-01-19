@@ -1,16 +1,13 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { filecontext } from "../../context/filetree";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-
 import TreeView from "@material-ui/lab/TreeView";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
-import { AuthContext } from "../../routes/auth";
-import { AccordionActions } from "@material-ui/core";
-
 import TreeMenu from "./TreeMenuItem";
+
+import { AuthContext } from "../../routes/auth";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,39 +38,7 @@ export default function FolderTree() {
     const classes = useStyles();
     const data = useContext(filecontext);
     const context = useContext(AuthContext);
-    const {
-        openFiles,
-        setopenFiles,
-        setcurrentOpenFile,
-        currentOpenFile,
-        actions,
-    } = data;
-    // useEffect(() => {
-    //     subscribeToMore({
-    //       document: MSGS_SUBSCRIPTION,
-    //       updateQuery: (prev, { subscriptionData }) => {
-    //         if (!subscriptionData.data) return prev;
-    //         if (subscriptionData.data.message.mutation === "DELETED") {
-    //           refetch();
-    //           return data;
-    //         }
 
-    //         const newMsg = subscriptionData.data.message.data;
-    //         if (
-    //           (newMsg[0].name === username || newMsg[0].senduser === username) &&
-    //           hasUser
-    //         ) {
-    //           setStatus({
-    //             type: "success",
-    //             msg: `${newMsg[0].name}'s message: ${newMsg[0].body} has saved!`,
-    //           });
-    //           return {
-    //             users: [...prev.users, ...newMsg],
-    //           };
-    //         } else return prev;
-    //       },
-    //     }); // eslint-disable-next-line
-    //   }, [subscribeToMore]);
     const renderTree = (node) => (
         <TreeItem
             key={node.id}

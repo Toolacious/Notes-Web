@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import { useReducer, useContext } from "react";
 import { ADDNOTE_Mutation } from "../../graphql/createNote";
 import { DELNOTE_Mutation } from "../../graphql/deleteNote";
 import { UPDNOTE_Mutation } from "../../graphql/updateNote";
@@ -15,7 +15,7 @@ function actionReducer(state, action) {
             return action.updData;
         case "NEW":
             return {
-                usernotes: action.data,
+                usernotes: [...state.usernotes, action.data],
                 openFiles: [...state.openFiles, action.id],
                 currentOpenFile: action.id,
             };
@@ -36,37 +36,26 @@ function actionReducer(state, action) {
                 };
             }
         case "RENAME":
-            updOpenFiles = state.openFiles.slice();
-            let pos = state.openFiles.indexOf(action.id);
-            if (pos !== -1) {
-                updOpenFiles[pos] = action.title;
-                return {
-                    ...state,
-                    usernotes: action.data,
-                    openFiles: updOpenFiles,
-                };
-            } else {
-                return {
-                    ...state,
-                    usernotes: action.data,
-                };
-            }
+            return {
+                ...state,
+                usernotes: action.data,
+            };
         case "DELETE":
-            updCurrentOpenFile = "";
-            updOpenFiles = [];
-            for (let i = 0; i < state.openFiles.length; i++) {
-                if (state.openFiles[i] === action.id) {
-                    if (i !== 0) {
-                        updCurrentOpenFile = state.openFiles[i - 1];
-                    }
-                    updOpenFiles = state.openFiles.filter(
-                        (e, idx) => idx !== i
-                    );
-                    break;
+            updCurrentOpenFile = state.currentOpenFile;
+            updOpenFiles = state.openFiles.filter((e) => e !== action.id);
+            if (action.id === state.currentOpenFile) {
+                let idx = state.openFiles.indexOf(state.currentOpenFile);
+                if (idx > 0) {
+                    updCurrentOpenFile = state.openFiles[idx - 1];
+                } else if (idx === 0 && state.openFiles.length > 1) {
+                    updCurrentOpenFile = state.openFiles[1];
+                } else {
+                    updCurrentOpenFile = "";
                 }
             }
             return {
-                usenotes: action.data,
+                ...state,
+                usernotes: action.data,
                 openFiles: updOpenFiles,
                 currentOpenFile: updCurrentOpenFile,
             };
@@ -169,15 +158,14 @@ function FileActions(initialState) {
     }
     async function renameFile(id, title) {
         try {
-            await updNote({ variables: { id, email, title } });
             let data = [...state.usernotes];
             data.find((e) => e.id === id).title = title;
             dispatch({
                 type: "RENAME",
                 id,
-                title,
                 data,
             });
+            await updNote({ variables: { id, email, title } });
         } catch (error) {
             console.log(error);
         }
@@ -185,13 +173,17 @@ function FileActions(initialState) {
     async function deleteFile(id) {
         // TODO: delete file in backend, return new usernotes data
         try {
-            await delNote({ variables: { id, email } });
             let data = [...state.usernotes];
+            let idx = data.findIndex((e) => e.id === id);
+            data.splice(idx, 1);
+            console.log(id);
+            console.log(data);
             dispatch({
-                type: "CLOSE",
-                id: id,
-                data: data,
+                type: "DELETE",
+                id,
+                data,
             });
+            await delNote({ variables: { id, email } });
         } catch (err) {
             console.log(err);
         }

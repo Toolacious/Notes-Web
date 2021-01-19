@@ -67,25 +67,6 @@ export const Mutation = {
             return err;
         }
     },
-    clearMessages: async (parent, args, { User, pubsub }, info) => {
-        try {
-            if (args.query) await User.deleteMany({ name: args.query });
-            else await User.deleteMany({});
-            const leftMsg = await User.find({});
-            pubsub.publish("message", {
-                message: {
-                    mutation: "DELETED",
-                    data: leftMsg,
-                },
-            });
-            return {
-                mutation: "DELETED",
-                name: args.query,
-            };
-        } catch (err) {
-            console.log(err);
-        }
-    },
     login: async (parent, args, { response, User, Notes }, info) => {
         try {
             const { error } = loginValidate(args.data);
@@ -160,13 +141,13 @@ export const Mutation = {
                 links,
             });
             const update = await notes.save();
-            console.log(update.notes[update.notes.length - 1]);
-            pubsub.publish("note", {
-                note: {
-                    mutation: "CREATED",
-                    data: update.notes[update.notes.length - 1],
-                },
-            });
+            // console.log(update.notes[update.notes.length - 1])
+            // pubsub.publish("note", {
+            //     note: {
+            //         mutation: "CREATED",
+            //         data: update.notes[update.notes.length - 1],
+            //     },
+            // });
             return update.notes[update.notes.length - 1];
         } catch (err) {
             console.log(err);
@@ -184,12 +165,12 @@ export const Mutation = {
             }
 
             await notes.save();
-            pubsub.publish("note", {
-                note: {
-                    mutation: "UPDATED",
-                    data: notes.notes.id(id),
-                },
-            });
+            // pubsub.publish("note", {
+            //     note: {
+            //         mutation: "UPDATED",
+            //         data: notes.notes.id(id),
+            //     },
+            // });
             return true;
         } catch (err) {
             console.log(err);
@@ -201,12 +182,12 @@ export const Mutation = {
             const notes = await Notes.findOne({ email });
             notes.notes.id(id).remove();
             await notes.save();
-            pubsub.publish("note", {
-                note: {
-                    mutation: "DELETED",
-                    data: null,
-                },
-            });
+            // pubsub.publish("note", {
+            //     note: {
+            //         mutation: "DELETED",
+            //         data: null,
+            //     },
+            // });
             return true;
         } catch (err) {
             console.log(err);

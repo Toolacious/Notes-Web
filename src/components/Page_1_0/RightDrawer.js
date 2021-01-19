@@ -1,10 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 
 import IconButton from "@material-ui/core/IconButton";
@@ -14,12 +13,10 @@ import LinkIcon from "@material-ui/icons/Link";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
 
 import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import { filecontext } from "../../context/filetree";
 import { mainContext } from "../../context/mainContext";
-import { ref } from "yup";
 
 const sidebarWidth = 32;
 const drawerWidth = 256;
@@ -69,7 +66,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PersistentDrawerRight() {
     const classes = useStyles();
-    const theme = useTheme();
     const { currentOpenFile, usernotes, actions } = useContext(filecontext);
     const { setSearchStr, setOpen, setMode } = useContext(mainContext);
     const [r_open, setr_open] = useState(false);

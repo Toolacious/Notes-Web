@@ -1,15 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
 import Toolbar from "@material-ui/core/Toolbar";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
 import SettingsIcon from "@material-ui/icons/Settings";
-import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
-
 import SimpleMenu from "./MenuItem";
 import AccountDialog from "./AccountDialog";
 import NewDialog from "./NewDialog";

@@ -1,26 +1,12 @@
 import React, { useState, useContext } from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import SearchIcon from "@material-ui/icons/Search";
 import FolderOutlinedIcon from "@material-ui/icons/FolderOutlined";
 import DeviceHubIcon from "@material-ui/icons/DeviceHub";
-
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
-import { TabRounded } from "@material-ui/icons";
 
 import SearchBox from "./SearchBox";
 import FolderTree from "./FolderTree";
@@ -69,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PersistentDrawerLeft() {
     const classes = useStyles();
-    const theme = useTheme();
     const { open, setOpen, mode, setMode } = useContext(mainContext);
     // const [open, setOpen] = useState(false);
     // const [mode, setMode] = useState("search");

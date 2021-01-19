@@ -10,7 +10,6 @@ import { ApolloLink, Observable } from "apollo-link";
 import { onError } from "apollo-link-error";
 import { createUploadLink } from "apollo-upload-client";
 import { TokenRefreshLink } from "apollo-link-token-refresh";
-import { WebSocketLink } from "apollo-link-ws";
 import jwtDecode from "jwt-decode";
 import { AuthProvider } from "./routes/auth";
 import { setAccessToken, getAccessToken } from "./accessToken";
@@ -19,12 +18,6 @@ import { setAccessToken, getAccessToken } from "./accessToken";
 const httpLink = createUploadLink({
     uri: "http://localhost:4000/",
     credentials: "include",
-});
-
-// Create a WebSocket link:
-const wsLink = new WebSocketLink({
-    uri: `ws://localhost:4000/`,
-    options: { reconnect: true },
 });
 
 const requestLink = new ApolloLink(
@@ -71,7 +64,7 @@ const RefreshLink = new TokenRefreshLink({
         }
 
         try {
-            const { exp, userId } = jwtDecode(token);
+            const { exp } = jwtDecode(token);
             if (Date.now() >= exp * 1000) {
                 return false;
             } else {
@@ -104,13 +97,7 @@ const errorLink = onError(({ graphQLErrors, networkError, errorMessage }) => {
 });
 
 const client = new ApolloClient({
-    link: ApolloLink.from([
-        RefreshLink,
-        errorLink,
-        requestLink,
-        httpLink,
-        wsLink,
-    ]),
+    link: ApolloLink.from([RefreshLink, errorLink, requestLink, httpLink]),
     cache: new InMemoryCache().restore({}),
 });
 

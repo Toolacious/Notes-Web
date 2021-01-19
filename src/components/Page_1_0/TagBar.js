@@ -1,11 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import Chip from "@material-ui/core/Chip";
-import IconButton from "@material-ui/core/IconButton";
-import { WrapText } from "@material-ui/icons";
 import { Popover } from "@material-ui/core";
 
 import { filecontext } from "../../context/filetree";
@@ -57,7 +54,6 @@ export default function TagBar() {
     const context = useContext(AuthContext);
     const [addtag] = useMutation(ADDTAG_Mutation);
     const [deltag] = useMutation(DELTAG_Mutation);
-    const [tagerr, setTagerr] = useState(false);
     const [tag, setTag] = useState("");
 
     const [chipData, setChipData] = useState([]);
@@ -71,15 +67,6 @@ export default function TagBar() {
     const updTag = (e) => {
         setTag(e.target.value);
     };
-
-    // useEffect(() => {
-    //     if (chipData.includes(tag)) {
-    //         setAnchorEle(document.getElementById("taginput"));
-    //     } else {
-    //         setAnchorEle(null);
-    //     }
-    //     return () => {};
-    // }, [tag]);
 
     const handleDelete = async (chipToDelete) => {
         try {
@@ -106,7 +93,7 @@ export default function TagBar() {
     };
 
     const newTag = async (e) => {
-        if (e.key === "Enter" && e.target.value !== "") {
+        if (e.key === "Enter" && e.target.value !== "" && currentOpenFile) {
             try {
                 if (chipData.includes(tag)) {
                     setAnchorEle(document.getElementById("taginput"));
@@ -114,7 +101,6 @@ export default function TagBar() {
                 }
                 console.log(tag);
                 let newnotes = [...usernotes];
-                let tags = newnotes.find((e) => e.id === currentOpenFile).tags;
                 newnotes.find((e) => e.id === currentOpenFile).tags.push(tag);
                 setuserNotes(newnotes);
                 setChipData([...chipData, tag]);
