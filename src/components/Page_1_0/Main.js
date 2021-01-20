@@ -87,8 +87,8 @@ const useStyles = makeStyles((theme) => ({
     modeButtonWrapper: {
         display: "flex",
         position: "absolute",
-        top: "6px",
-        right: "6px",
+        top: theme.spacing(1),
+        right: theme.spacing(2),
         borderRadius: "16px",
         border: "1px solid black",
         backgroundColor: "white",

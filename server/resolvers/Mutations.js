@@ -105,7 +105,7 @@ export const Mutation = {
         try {
             const { id, email, title, markdown, links } = args.data;
             const notes = await Notes.findOne({ email });
-            if (markdown || links.length >= 0) {
+            if (markdown) {
                 notes.notes.id(id).set({ markdown, links });
             } else {
                 notes.notes.id(id).set({ title });

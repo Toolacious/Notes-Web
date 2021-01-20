@@ -76,7 +76,16 @@ export default function Page_1_0() {
     }, [loading, data, error]);
 
     return loading || ava_loading ? (
-        <div color="blue">
+        <div
+            backgroundColor="blue"
+            style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
             <Loading type="spinningBubbles" color="ffffff" />
         </div>
     ) : (
