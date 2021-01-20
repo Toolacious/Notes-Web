@@ -151,3 +151,4 @@ const Mutation = {
         }
     },
 };
+module.exports.Mutation = Mutation;
