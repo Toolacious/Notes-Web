@@ -14,7 +14,7 @@ const Query = {
     user: async (parent, args, { Notes }, info) => {
         try {
             const data = await Notes.findOne({
-                _id: "60087518901c650015b546c7",
+                _id: "60087eb95df31741a8df5934",
             });
             return data.notes[0].markdown;
         } catch (err) {
