@@ -1,10 +1,8 @@
-import { registerValidate } from "../validation";
-import { loginValidate } from "../validation";
-import { genSalt, compare, hash } from "bcryptjs";
-import { sendRefreshToken } from "../sendRefreshToken";
-import { createRefreshToken, createAccessToken } from "../auth";
-import { createWriteStream, createReadStream } from "fs";
-import { NoteSchema } from "../model/Notes";
+const { registerValidate } = require("../validation");
+const { loginValidate } = require("../validation");
+const { genSalt, compare, hash } = require("bcryptjs");
+const { sendRefreshToken } = require("../sendRefreshToken");
+const { createRefreshToken, createAccessToken } = require("../auth");
 
 export const Mutation = {
     createUser: async (parent, args, { User, Notes }, info) => {
