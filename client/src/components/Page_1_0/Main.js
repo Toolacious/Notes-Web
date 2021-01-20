@@ -17,6 +17,7 @@ import Markdown from "./Markdown";
 import { useMutation } from "@apollo/react-hooks";
 import { UPDNOTE_Mutation } from "../../graphql/updateNote";
 import { AuthContext } from "../../routes/auth";
+import { mainContext } from "../../context/mainContext";
 
 const pageBarHeight = 24;
 const useStyles = makeStyles((theme) => ({
@@ -87,10 +88,11 @@ const useStyles = makeStyles((theme) => ({
     modeButtonWrapper: {
         display: "flex",
         position: "absolute",
-        top: "6px",
-        right: "6px",
+        top: theme.spacing(1),
+        right: theme.spacing(2),
         borderRadius: "16px",
         border: "1px solid black",
+        backgroundColor: "white",
     },
     nopad: {
         padding: "0px",
@@ -122,6 +124,7 @@ export default function Main() {
     const {
         user: { email },
     } = useContext(AuthContext);
+    const { guide } = useContext(mainContext);
     const classes = useStyles();
     const theme = useTheme();
     const { usernotes, openFiles, currentOpenFile, actions } = useContext(
@@ -138,7 +141,6 @@ export default function Main() {
     const addPage = (node) => {
         setPages([...pages, node]);
         setPageNum(pageNum + 1);
-        console.log(pages);
     };
 
     useEffect(() => {
@@ -148,7 +150,6 @@ export default function Main() {
                 { unsaved: false },
                 usernotes.find((e) => e.id === fileID)
             );
-            console.log(node);
             addPage(node);
         }
     }, [openFiles]);
@@ -216,9 +217,6 @@ export default function Main() {
 
                     // The result can be accessed through the `m`-variable.
                     g.forEach((match, groupIndex) => {
-                        console.log(
-                            `Found match, group ${groupIndex}: ${match}`
-                        );
                         if (groupIndex === 1) links.push(match);
                     });
                 }
@@ -246,7 +244,11 @@ export default function Main() {
         <div className={classes.root}>
             <CssBaseline />
             {openFiles.length === 0 ? (
-                <div className={classes.mainWindowWrapper}>No Page</div>
+                <div className={classes.mainWindowWrapper}>
+                    <Markdown className={`input ${classes.outputStyle}`}>
+                        {guide}
+                    </Markdown>
+                </div>
             ) : (
                 <>
                     <div className={classes.pageBar}>
@@ -302,6 +304,13 @@ export default function Main() {
                             >
                                 <EditIcon />
                             </IconButton>
+                            <Divider
+                                orientation="vertical"
+                                style={{
+                                    height: "24px",
+                                    backgroundColor: "rgb(160, 160, 160)",
+                                }}
+                            ></Divider>
                             <IconButton
                                 color={mode === "mix" ? "inherit" : "default"}
                                 onClick={() => handleMode("mix")}
@@ -315,16 +324,26 @@ export default function Main() {
                             {pageNum === openFiles.length &&
                             pages[openFiles.indexOf(currentOpenFile)]
                                 .unsaved ? (
-                                <IconButton
-                                    id="saveMain"
-                                    onClick={() => save(currentOpenFile)}
-                                    classes={{
-                                        root: classes.nopad,
-                                    }}
-                                    disableRipple={true}
-                                >
-                                    <SaveIcon />
-                                </IconButton>
+                                <>
+                                    <Divider
+                                        orientation="vertical"
+                                        style={{
+                                            height: "24px",
+                                            backgroundColor:
+                                                "rgb(160, 160, 160)",
+                                        }}
+                                    ></Divider>
+                                    <IconButton
+                                        id="saveMain"
+                                        onClick={() => save(currentOpenFile)}
+                                        classes={{
+                                            root: classes.nopad,
+                                        }}
+                                        disableRipple={true}
+                                    >
+                                        <SaveIcon />
+                                    </IconButton>
+                                </>
                             ) : null}
                             {openDialog ? (
                                 <SaveDialog func={dialogFunctions}></SaveDialog>

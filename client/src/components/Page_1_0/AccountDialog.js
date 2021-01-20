@@ -16,12 +16,14 @@ const useStyles = makeStyles((theme) => ({
     avatar: {
         height: "128px",
         width: "128px",
+        borderRadius: "50%",
     },
     headerAvatar: {
         height: "48px",
         width: "48px",
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
+        borderRadius: "50%",
     },
     headerAvatarWrapper: {
         display: "flex",

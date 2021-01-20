@@ -35,7 +35,18 @@ function App() {
         <div className="App">
             <Router>
                 {loading ? (
-                    <Loading type="spinningBubbles" color="ffffff" />
+                    <div
+                        backgroundColor="blue"
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Loading type="spinningBubbles" color="ffffff" />
+                    </div>
                 ) : (
                     <Routes />
                 )}

@@ -9,6 +9,7 @@ import { AvatarContext } from "../../context/avatarContext";
 import { useQuery } from "@apollo/react-hooks";
 import { NOTES_QUERY } from "../../graphql/notes";
 import { AVATAR_QUERY } from "../../graphql/getAvatar";
+import { GUIDE_QUERY } from "../../graphql/noti";
 import { AuthContext } from "../../routes/auth";
 
 import PersistentDrawerLeft from "./LeftDrawer";
@@ -25,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(3),
     },
     pageContainer: {
-        minHeight: "100%",
+        width: "100vw",
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
     },
@@ -59,6 +61,19 @@ export default function Page_1_0() {
     }, [ava_loading]);
 
     const {
+        loading: guide_loading,
+        error: guide_error,
+        data: guide_data,
+    } = useQuery(GUIDE_QUERY);
+    const [guide, setGuide] = useState("");
+    useEffect(() => {
+        if (!guide_loading && !guide_error) {
+            setGuide(guide_data.user);
+        }
+        return () => {};
+    }, [guide_loading]);
+
+    const {
         usernotes,
         openFiles,
         currentOpenFile,
@@ -74,8 +89,17 @@ export default function Page_1_0() {
         }
     }, [loading, data, error]);
 
-    return loading || ava_loading ? (
-        <div color="blue">
+    return loading || ava_loading || guide_loading ? (
+        <div
+            backgroundColor="blue"
+            style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
             <Loading type="spinningBubbles" color="ffffff" />
         </div>
     ) : (
@@ -108,12 +132,14 @@ export default function Page_1_0() {
                             setOpen,
                             searchStr,
                             setSearchStr,
+                            guide,
                         }}
                     >
                         <main
                             style={{
                                 display: "flex",
                                 flexGrow: 1,
+                                width: "100vw",
                                 alignItems: "stretch",
                             }}
                         >
@@ -121,13 +147,24 @@ export default function Page_1_0() {
                             <div
                                 style={{
                                     display: "flex",
-                                    flexGrow: 1,
-                                    flexDirection: "column",
-                                    alignItems: "stretch",
+                                    flex: "1 1 0",
+                                    minWidth: "0px",
+                                    overflowY: "hidden",
                                 }}
                             >
-                                <Main></Main>
-                                <TagBar></TagBar>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexGrow: 1,
+                                        maxWidth: "100%",
+                                        minWidth: "0px",
+                                        flexDirection: "column",
+                                        alignItems: "stretch",
+                                    }}
+                                >
+                                    <Main></Main>
+                                    <TagBar></TagBar>
+                                </div>
                             </div>
                             <PersistentDrawerRight></PersistentDrawerRight>
                         </main>

@@ -20,7 +20,7 @@ import { CREATE_USER_MUTATION } from "../graphql/mutations";
 import { LOGIN_Mutation } from "../graphql/login";
 import { setAccessToken } from "../accessToken";
 import { useHistory } from "react-router-dom";
-
+import loginImg from "../icons/signup.jpg";
 import { AuthContext } from "../routes/auth";
 
 function Copyright() {
@@ -28,7 +28,7 @@ function Copyright() {
         <Typography variant="body2" color="textSecondary" align="center">
             {"Copyright © "}
             <Link color="inherit" to="https://material-ui.com/">
-                Your Website
+                Abyss Notes
             </Link>{" "}
             {new Date().getFullYear()}
             {"."}
@@ -38,10 +38,22 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        backgroundColor: "white",
+        padding: theme.spacing(2),
+        borderRadius: "20px",
+    },
+    image: {
+        backgroundImage: `url(${loginImg})`,
+        backgroundRepeat: "no-repeat",
+        backgroundColor:
+            theme.palette.type === "light"
+                ? theme.palette.grey[50]
+                : theme.palette.grey[900],
+        backgroundSize: "cover",
+        backgroundPosition: "center",
     },
     avatar: {
         margin: theme.spacing(1),
@@ -53,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+    },
+    space: {
+        height: theme.spacing(8),
     },
 }));
 
@@ -133,182 +148,184 @@ export default function SignUp() {
     });
 
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign up
-                </Typography>
-                <form
-                    className={classes.form}
-                    onSubmit={formik.handleSubmit}
-                    noValidate
-                >
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                autoComplete="fname"
-                                name="fname"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="fname"
-                                label="First name"
-                                autoFocus
-                                value={formik.values.fname}
-                                onChange={formik.handleChange}
-                                error={
-                                    formik.touched.fname &&
-                                    Boolean(formik.errors.fname)
-                                }
-                                helperText={
-                                    formik.touched.fname && formik.errors.fname
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="lname"
-                                label="Last name"
-                                name="lname"
-                                autoComplete="lname"
-                                value={formik.values.lname}
-                                onChange={formik.handleChange}
-                                error={
-                                    formik.touched.lname &&
-                                    Boolean(formik.errors.lname)
-                                }
-                                helperText={
-                                    formik.touched.lname && formik.errors.lname
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                autoComplete="username"
-                                name="name"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="name"
-                                label="Username"
-                                autoFocus
-                                value={formik.values.name}
-                                onChange={formik.handleChange}
-                                error={
-                                    formik.touched.name &&
-                                    Boolean(formik.errors.name)
-                                }
-                                helperText={
-                                    formik.touched.name && formik.errors.name
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="email"
-                                label="Email Address"
-                                name="email"
-                                autoComplete="email"
-                                value={formik.values.email}
-                                onChange={formik.handleChange}
-                                error={
-                                    (formik.touched.email &&
-                                        Boolean(formik.errors.email)) ||
-                                    regiErr !== ""
-                                }
-                                helperText={
-                                    (formik.touched.email &&
-                                        formik.errors.email) ||
-                                    regiErr
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                                onChange={formik.handleChange}
-                                error={
-                                    formik.touched.password &&
-                                    Boolean(formik.errors.password)
-                                }
-                                helperText={
-                                    formik.touched.password &&
-                                    formik.errors.password
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                name="confirmPassword"
-                                label="Confirm Password"
-                                type="password"
-                                id="confirmPassword"
-                                autoComplete="current-password"
-                                onChange={formik.handleChange}
-                                error={
-                                    formik.touched.confirmPassword &&
-                                    Boolean(formik.errors.confirmPassword)
-                                }
-                                helperText={
-                                    formik.touched.confirmPassword &&
-                                    formik.errors.confirmPassword
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        value="allowExtraEmails"
-                                        color="primary"
-                                    />
-                                }
-                                label="I want to receive inspiration, marketing promotions and updates via email."
-                            />
-                        </Grid>
-                    </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        disabled={formik.isSubmitting}
+        <div
+            style={{ width: "100vw", height: "100vh" }}
+            className={classes.image}
+        >
+            <Container
+                component="main"
+                maxWidth="xs"
+                style={{ height: "100%" }}
+            >
+                <CssBaseline />
+                <div className={classes.space}></div>
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign up
+                    </Typography>
+                    <form
+                        className={classes.form}
+                        onSubmit={formik.handleSubmit}
+                        noValidate
                     >
-                        Sign Up
-                    </Button>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link to="/login" variant="body2">
-                                Already have an account? Sign in
-                            </Link>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    autoComplete="fname"
+                                    name="fname"
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="fname"
+                                    label="First name"
+                                    autoFocus
+                                    value={formik.values.fname}
+                                    onChange={formik.handleChange}
+                                    error={
+                                        formik.touched.fname &&
+                                        Boolean(formik.errors.fname)
+                                    }
+                                    helperText={
+                                        formik.touched.fname &&
+                                        formik.errors.fname
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="lname"
+                                    label="Last name"
+                                    name="lname"
+                                    autoComplete="lname"
+                                    value={formik.values.lname}
+                                    onChange={formik.handleChange}
+                                    error={
+                                        formik.touched.lname &&
+                                        Boolean(formik.errors.lname)
+                                    }
+                                    helperText={
+                                        formik.touched.lname &&
+                                        formik.errors.lname
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    autoComplete="username"
+                                    name="name"
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="name"
+                                    label="Username"
+                                    autoFocus
+                                    value={formik.values.name}
+                                    onChange={formik.handleChange}
+                                    error={
+                                        formik.touched.name &&
+                                        Boolean(formik.errors.name)
+                                    }
+                                    helperText={
+                                        formik.touched.name &&
+                                        formik.errors.name
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="email"
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    value={formik.values.email}
+                                    onChange={formik.handleChange}
+                                    error={
+                                        (formik.touched.email &&
+                                            Boolean(formik.errors.email)) ||
+                                        regiErr !== ""
+                                    }
+                                    helperText={
+                                        (formik.touched.email &&
+                                            formik.errors.email) ||
+                                        regiErr
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    autoComplete="current-password"
+                                    onChange={formik.handleChange}
+                                    error={
+                                        formik.touched.password &&
+                                        Boolean(formik.errors.password)
+                                    }
+                                    helperText={
+                                        formik.touched.password &&
+                                        formik.errors.password
+                                    }
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    name="confirmPassword"
+                                    label="Confirm Password"
+                                    type="password"
+                                    id="confirmPassword"
+                                    autoComplete="current-password"
+                                    onChange={formik.handleChange}
+                                    error={
+                                        formik.touched.confirmPassword &&
+                                        Boolean(formik.errors.confirmPassword)
+                                    }
+                                    helperText={
+                                        formik.touched.confirmPassword &&
+                                        formik.errors.confirmPassword
+                                    }
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={5}>
-                <Copyright />
-            </Box>
-        </Container>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            disabled={formik.isSubmitting}
+                        >
+                            Sign Up
+                        </Button>
+                        <Grid container justify="flex-end">
+                            <Grid item xs>
+                                <Link to="/login" variant="body2">
+                                    Already have an account? Sign in
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </form>
+                </div>
+                <Box mt={5}>
+                    <Copyright />
+                </Box>
+            </Container>
+        </div>
     );
 }

@@ -40,7 +40,6 @@ export default function TreeMenu(props) {
 
     const handleClick = (event) => {
         event.preventDefault();
-        console.log(event.currentTarget);
         setAnchorEl(event.currentTarget);
     };
 
@@ -54,11 +53,7 @@ export default function TreeMenu(props) {
                     position: "relative",
                 }}
                 onClick={(e) => {
-                    console.log(e.button);
                     if (e.button === 0) {
-                        console.log(e.currentTarget);
-                        console.log("it should go here");
-
                         actions.open(node.id);
                         if (document.getElementsByClassName("input")[0])
                             document.getElementsByClassName("input")[0].focus();
