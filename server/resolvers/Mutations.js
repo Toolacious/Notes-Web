@@ -4,7 +4,7 @@ const { genSalt, compare, hash } = require("bcryptjs");
 const { sendRefreshToken } = require("../sendRefreshToken");
 const { createRefreshToken, createAccessToken } = require("../auth");
 
-export const Mutation = {
+const Mutation = {
     createUser: async (parent, args, { User, Notes }, info) => {
         try {
             // validate
