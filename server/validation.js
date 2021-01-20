@@ -21,3 +21,6 @@ export const loginValidate = (data) => {
     });
     return Joi.validate(data, schema, { abortEarly: false });
 };
+
+module.exports.loginValidate = loginValidate;
+module.exports.registerValidate = registerValidate;

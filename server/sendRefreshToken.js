@@ -4,3 +4,4 @@ export const sendRefreshToken = (res, token) => {
         path: "/refresh_token",
     });
 };
+module.exports.sendRefreshToken = sendRefreshToken;

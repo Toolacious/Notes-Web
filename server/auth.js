@@ -1,4 +1,5 @@
-import { sign } from "jsonwebtoken";
+// import { sign } from "jsonwebtoken";
+const { sign } = require("jsonwebtoken");
 
 export const createAccessToken = (user) => {
     return sign(
@@ -19,3 +20,5 @@ export const createRefreshToken = (user) => {
         }
     );
 };
+module.exports.createAccessToken = createAccessToken;
+module.exports.createRefreshToken = createRefreshToken;

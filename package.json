@@ -2,7 +2,7 @@
     "name": "final",
     "version": "0.1.0",
     "scripts": {
-        "start": "babel-node server/index.js",
+        "start": "node server/index.js",
         "server": "nodemon",
         "client": "npm start --prefix client",
         "dev": "concurrently \"npm run server\" \"npm run client\""
