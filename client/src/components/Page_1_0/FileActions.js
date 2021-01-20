@@ -175,8 +175,6 @@ function FileActions(initialState) {
             let data = [...state.usernotes];
             let idx = data.findIndex((e) => e.id === id);
             data.splice(idx, 1);
-            console.log(id);
-            console.log(data);
             dispatch({
                 type: "DELETE",
                 id,

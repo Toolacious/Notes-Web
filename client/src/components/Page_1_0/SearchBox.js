@@ -59,12 +59,10 @@ export default function SearchBox() {
                     let { title, id, markdown } = e;
                     e.tags.forEach((ele) => {
                         if (ele === searchStr.slice(6)) {
-                            console.log("success");
                             alltags.push({ title, id, markdown });
                         }
                     });
                 });
-                console.log("search tag");
                 setTagItem(alltags);
             } else {
                 let titlefiles = [];
@@ -78,7 +76,6 @@ export default function SearchBox() {
                         mdfiles.push({ title, id, markdown });
                     }
                 });
-                console.log("search files");
                 setTitleItem(titlefiles);
                 setMdItem(mdfiles);
             }
