@@ -72,23 +72,32 @@ export default function PersistentDrawerRight() {
     const [r_mode, setr_Mode] = useState("link");
 
     //links, tags to be showed
-    const [links, setLink] = useState([]);
+    const [inlinks, setInLink] = useState([]);
+    const [outlinks, setOutLink] = useState([]);
     useEffect(() => {
         try {
             if (currentOpenFile) {
                 let title = usernotes.find((e) => e.id === currentOpenFile)
                     .title;
-                let alllinks = {};
+                let inLinks = {};
+                let outLinks = {};
+                let tmp = usernotes.find((e) => e.id === currentOpenFile).links;
                 usernotes.forEach((e) => {
                     e.links.forEach((ele) => {
                         if (ele === title) {
-                            if (!Object.keys(alllinks).includes(e.title)) {
-                                alllinks[e.title] = e.id;
+                            if (!Object.keys(inLinks).includes(e.title)) {
+                                inLinks[e.title] = e.id;
                             }
                         }
                     });
                 });
-                setLink(Object.entries(alllinks));
+                setInLink(Object.entries(inLinks));
+                usernotes.forEach((e) => {
+                    if (tmp.includes(e.title)) {
+                        outLinks[e.title] = e.id;
+                    }
+                });
+                setOutLink(Object.entries(outLinks));
             }
         } catch (error) {
             console.log(error);
@@ -114,9 +123,9 @@ export default function PersistentDrawerRight() {
     }, [usernotes]);
     const [showingItem, setShowingItem] = useState([]);
     useEffect(() => {
-        setShowingItem(r_mode === "link" ? links : tags);
+        setShowingItem(r_mode === "link" ? inlinks : tags);
         return () => {};
-    }, [r_mode, links, tags]);
+    }, [r_mode, inlinks, outlinks, tags]);
 
     const handleDrawerOpen = () => {
         setr_open(!r_open);

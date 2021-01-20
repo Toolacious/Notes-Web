@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(3),
     },
     pageContainer: {
-        minHeight: "100%",
+        width: "100vw",
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
     },
@@ -114,6 +115,7 @@ export default function Page_1_0() {
                             style={{
                                 display: "flex",
                                 flexGrow: 1,
+                                width: "100vw",
                                 alignItems: "stretch",
                             }}
                         >
@@ -121,13 +123,24 @@ export default function Page_1_0() {
                             <div
                                 style={{
                                     display: "flex",
-                                    flexGrow: 1,
-                                    flexDirection: "column",
-                                    alignItems: "stretch",
+                                    flex: "1 1 0",
+                                    minWidth: "0px",
+                                    overflowY: "hidden",
                                 }}
                             >
-                                <Main></Main>
-                                <TagBar></TagBar>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexGrow: 1,
+                                        maxWidth: "100%",
+                                        minWidth: "0px",
+                                        flexDirection: "column",
+                                        alignItems: "stretch",
+                                    }}
+                                >
+                                    <Main></Main>
+                                    <TagBar></TagBar>
+                                </div>
                             </div>
                             <PersistentDrawerRight></PersistentDrawerRight>
                         </main>

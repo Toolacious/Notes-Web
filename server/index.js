@@ -10,6 +10,7 @@ import { verify } from "jsonwebtoken";
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const bodyparser = require("body-parser");
 
 const server = new GraphQLServer({
     typeDefs: "./server/schema.graphql",
@@ -26,7 +27,8 @@ server.express.use(
         credentials: true,
     })
 );
-
+server.express.use(bodyparser.json({ limit: "50mb" }));
+server.express.use(bodyparser.urlencoded({ limit: "50mb", extended: true }));
 server.express.use("/refresh_token", cookieParser());
 
 server.express.post("/refresh_token", async (req, res) => {
