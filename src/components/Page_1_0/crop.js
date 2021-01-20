@@ -36,6 +36,11 @@ async function generateDownload(canvas, crop, upload, id, setAvatar) {
 }
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        width: "60vw",
+        height: "60vh",
+        padding: theme.spacing(0, 3),
+    },
     avatar: {
         height: "128px",
         width: "128px",
@@ -57,10 +62,17 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         marginBottom: theme.spacing(3),
     },
-    dialogButton: {
+    dialogButtonWrapper: {
+        display: "flex",
         width: "50%",
+        flexGrow: 1,
+    },
+    dialogButton: {
+        display: "flex",
+        width: "100%",
         fontSize: "18px",
         textTransform: "none",
+        textAlign: "center",
     },
     dialog: {},
     input: {
@@ -132,7 +144,7 @@ export default function Crop() {
 
     return (
         <>
-            <div style={{ height: "60vh", width: "60vw" }}>
+            <div className={classes.root}>
                 <ReactCrop
                     src={upImg}
                     onImageLoaded={onLoad}
@@ -140,6 +152,11 @@ export default function Crop() {
                     onChange={(c) => setCrop(c)}
                     onComplete={(c) => setCompletedCrop(c)}
                     circularCrop
+                    style={{
+                        maxHeight: "100%",
+                        maxWidth: "100%",
+                        overflow: "auto",
+                    }}
                 />
                 <div>
                     <canvas
@@ -161,7 +178,10 @@ export default function Crop() {
                     type="file"
                     onChange={onSelectFile}
                 />
-                <label htmlFor="contained-button-file">
+                <label
+                    htmlFor="contained-button-file"
+                    className={classes.dialogButtonWrapper}
+                >
                     <Button
                         className={classes.dialogButton}
                         onClick={() => {}}
@@ -171,24 +191,38 @@ export default function Crop() {
                         Upload
                     </Button>
                 </label>
-
-                <Button
-                    className={classes.dialogButton}
-                    disabled={!completedCrop?.width || !completedCrop?.height}
-                    onClick={() =>
-                        generateDownload(
-                            previewCanvasRef.current,
-                            completedCrop,
-                            upload,
-                            id,
-                            setAvatar
-                        )
-                    }
-                    color="primary"
-                >
-                    Save
-                </Button>
+                <div className={classes.dialogButtonWrapper}>
+                    <Button
+                        className={classes.dialogButton}
+                        disabled={
+                            !completedCrop?.width || !completedCrop?.height
+                        }
+                        onClick={() =>
+                            generateDownload(
+                                previewCanvasRef.current,
+                                completedCrop,
+                                upload,
+                                id,
+                                setAvatar
+                            )
+                        }
+                        color="primary"
+                    >
+                        Save
+                    </Button>
+                </div>
             </DialogActions>
         </>
     );
 }
+/*<div>
+                    <canvas
+                        ref={previewCanvasRef}
+                        // Rounding is important so the canvas width and height matches/is a multiple for sharpness.
+                        style={{
+                            width: Math.round(completedCrop?.width ?? 0),
+                            height: Math.round(completedCrop?.height ?? 0),
+                            display: "none",
+                        }}
+                    />
+                </div> */

@@ -61,8 +61,8 @@ export default function RenameDialog(props) {
                     fullWidth
                     onChange={(e) => handleTitle(e.target.value)}
                     onKeyDown={(e) => {
-                        e.preventDefault();
                         if (e.key === "Enter") {
+                            e.preventDefault();
                             handleCreate();
                         }
                     }}
