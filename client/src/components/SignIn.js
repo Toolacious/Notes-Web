@@ -124,9 +124,10 @@ export default function SignIn() {
                 square
             >
                 <div className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
-                    </Avatar>
+                    <Avatar
+                        className={classes.avatar}
+                        src={LockOutlinedIcon}
+                    ></Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>

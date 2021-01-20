@@ -155,9 +155,10 @@ export default function SignUp() {
                 <CssBaseline />
                 <div className={classes.space}></div>
                 <div className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
-                    </Avatar>
+                    <Avatar
+                        className={classes.avatar}
+                        src={LockOutlinedIcon}
+                    ></Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
