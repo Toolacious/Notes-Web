@@ -12,23 +12,22 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@apollo/react-hooks";
-//import { signin } from "../axios";
 import { LOGIN_Mutation } from "../graphql/login";
 import { AuthContext } from "../routes/auth";
-
 import { setAccessToken } from "../accessToken";
 import { useHistory } from "react-router-dom";
+//import Image from "material-ui-image";
+import Paper from "@material-ui/core/Paper";
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {"Copyright © "}
             <Link color="inherit" to="https://material-ui.com/">
-                Your Website
+                Abyss Notes
             </Link>{" "}
             {new Date().getFullYear()}
             {"."}
@@ -37,8 +36,21 @@ function Copyright() {
 }
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        height: "100vh",
+    },
+    image: {
+        backgroundImage: "url(https://source.unsplash.com/random)",
+        backgroundRepeat: "no-repeat",
+        backgroundColor:
+            theme.palette.type === "light"
+                ? theme.palette.grey[50]
+                : theme.palette.grey[900],
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+    },
     paper: {
-        marginTop: theme.spacing(8),
+        margin: theme.spacing(8, 4),
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -104,96 +116,98 @@ export default function SignIn() {
     });
 
     return (
-        <Container component="main" maxWidth="xs">
+        <Grid container component="main" className={classes.root}>
             <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Sign in
-                </Typography>
-                <form
-                    className={classes.form}
-                    onSubmit={formik.handleSubmit}
-                    noValidate
-                >
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        error={
-                            (formik.touched.email &&
-                                Boolean(formik.errors.email)) ||
-                            loginErr[0] === "E"
-                        }
-                        helperText={
-                            (formik.touched.email && formik.errors.email) ||
-                            (loginErr[0] === "E" ? loginErr : null)
-                        }
-                    />
-
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        onChange={formik.handleChange}
-                        error={
-                            (formik.touched.password &&
-                                Boolean(formik.errors.password)) ||
-                            loginErr[0] === "P"
-                        }
-                        helperText={
-                            (formik.touched.password &&
-                                formik.errors.password) ||
-                            (loginErr[0] === "P" ? loginErr : null)
-                        }
-                    />
-                    <FormControlLabel
-                        control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
-                    />
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                        disabled={formik.isSubmitting}
+            <Grid item xs={false} sm={4} md={7} className={classes.image} />
+            <Grid
+                item
+                xs={12}
+                sm={8}
+                md={5}
+                component={Paper}
+                elevation={6}
+                square
+            >
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <form
+                        className={classes.form}
+                        onSubmit={formik.handleSubmit}
+                        noValidate
                     >
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link to="#" variant="body2">
-                                Forgot password?
-                            </Link>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            autoComplete="email"
+                            autoFocus
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            error={
+                                (formik.touched.email &&
+                                    Boolean(formik.errors.email)) ||
+                                loginErr[0] === "E"
+                            }
+                            helperText={
+                                (formik.touched.email && formik.errors.email) ||
+                                (loginErr[0] === "E" ? loginErr : null)
+                            }
+                        />
+
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            onChange={formik.handleChange}
+                            error={
+                                (formik.touched.password &&
+                                    Boolean(formik.errors.password)) ||
+                                loginErr[0] === "P"
+                            }
+                            helperText={
+                                (formik.touched.password &&
+                                    formik.errors.password) ||
+                                (loginErr[0] === "P" ? loginErr : null)
+                            }
+                        />
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            disabled={formik.isSubmitting}
+                        >
+                            Sign In
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link to="/signup" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link to="/signup" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
-        </Container>
+                        <Box mt={5}>
+                            <Copyright />
+                        </Box>
+                    </form>
+                </div>
+            </Grid>
+        </Grid>
     );
 }

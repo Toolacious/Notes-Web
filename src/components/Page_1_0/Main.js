@@ -17,6 +17,7 @@ import Markdown from "./Markdown";
 import { useMutation } from "@apollo/react-hooks";
 import { UPDNOTE_Mutation } from "../../graphql/updateNote";
 import { AuthContext } from "../../routes/auth";
+import { mainContext } from "../../context/mainContext";
 
 const pageBarHeight = 24;
 const useStyles = makeStyles((theme) => ({
@@ -123,6 +124,7 @@ export default function Main() {
     const {
         user: { email },
     } = useContext(AuthContext);
+    const { guide } = useContext(mainContext);
     const classes = useStyles();
     const theme = useTheme();
     const { usernotes, openFiles, currentOpenFile, actions } = useContext(
@@ -247,7 +249,11 @@ export default function Main() {
         <div className={classes.root}>
             <CssBaseline />
             {openFiles.length === 0 ? (
-                <div className={classes.mainWindowWrapper}>No Page</div>
+                <div className={classes.mainWindowWrapper}>
+                    <Markdown className={`input ${classes.outputStyle}`}>
+                        {guide}
+                    </Markdown>
+                </div>
             ) : (
                 <>
                     <div className={classes.pageBar}>

@@ -9,6 +9,7 @@ import { AvatarContext } from "../../context/avatarContext";
 import { useQuery } from "@apollo/react-hooks";
 import { NOTES_QUERY } from "../../graphql/notes";
 import { AVATAR_QUERY } from "../../graphql/getAvatar";
+import { GUIDE_QUERY } from "../../graphql/noti";
 import { AuthContext } from "../../routes/auth";
 
 import PersistentDrawerLeft from "./LeftDrawer";
@@ -60,6 +61,19 @@ export default function Page_1_0() {
     }, [ava_loading]);
 
     const {
+        loading: guide_loading,
+        error: guide_error,
+        data: guide_data,
+    } = useQuery(GUIDE_QUERY);
+    const [guide, setGuide] = useState("");
+    useEffect(() => {
+        if (!guide_loading && !guide_error) {
+            setGuide(guide_data.user);
+        }
+        return () => {};
+    }, [guide_loading]);
+
+    const {
         usernotes,
         openFiles,
         currentOpenFile,
@@ -75,7 +89,7 @@ export default function Page_1_0() {
         }
     }, [loading, data, error]);
 
-    return loading || ava_loading ? (
+    return loading || ava_loading || guide_loading ? (
         <div
             backgroundColor="blue"
             style={{
@@ -118,6 +132,7 @@ export default function Page_1_0() {
                             setOpen,
                             searchStr,
                             setSearchStr,
+                            guide,
                         }}
                     >
                         <main

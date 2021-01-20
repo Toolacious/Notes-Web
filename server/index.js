@@ -87,6 +87,7 @@ db.once("open", () => {
         {
             port: PORT,
             cors: { credentials: true, origin: ["http://localhost:3000"] },
+            playground: "/graphql",
         },
         () => {
             console.log(`Listening on http://localhost:${PORT}`);
