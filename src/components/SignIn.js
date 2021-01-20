@@ -19,8 +19,8 @@ import { LOGIN_Mutation } from "../graphql/login";
 import { AuthContext } from "../routes/auth";
 import { setAccessToken } from "../accessToken";
 import { useHistory } from "react-router-dom";
-//import Image from "material-ui-image";
 import Paper from "@material-ui/core/Paper";
+import loginImg from "../icons/login.png";
 
 function Copyright() {
     return (
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         height: "100vh",
     },
     image: {
-        backgroundImage: "url(https://source.unsplash.com/random)",
+        backgroundImage: `url(${loginImg})`,
         backgroundRepeat: "no-repeat",
         backgroundColor:
             theme.palette.type === "light"
@@ -98,12 +98,7 @@ export default function SignIn() {
                         password,
                     },
                 });
-                if (!error && !loading) {
-                    console.log("redirect");
-                }
                 if (response && response.data) {
-                    console.log("response");
-                    console.log(response.data);
                     setAccessToken(response.data.login.accessToken);
                 }
                 context.login(response.data.login);
@@ -155,11 +150,14 @@ export default function SignIn() {
                             error={
                                 (formik.touched.email &&
                                     Boolean(formik.errors.email)) ||
-                                loginErr[0] === "E"
+                                loginErr[0] === "E" ||
+                                loginErr[1] === "e"
                             }
                             helperText={
                                 (formik.touched.email && formik.errors.email) ||
-                                (loginErr[0] === "E" ? loginErr : null)
+                                (loginErr[0] === "E" || loginErr[1] === "e"
+                                    ? loginErr
+                                    : null)
                             }
                         />
 

@@ -7,9 +7,11 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import SimpleMenu from "./MenuItem";
 import AccountDialog from "./AccountDialog";
 import NewDialog from "./NewDialog";
-import icon from "../../icons/icon.jpg";
+import icon from "../../icons/icon.png";
 import user from "../../icons/avatar.png";
 import { AvatarContext } from "../../context/avatarContext";
+import titleImg from "../../icons/title.png";
+import Image from "material-ui-image";
 
 const useStyles = makeStyles((theme) => ({
     headerWrapper: {
@@ -25,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
         width: "48px",
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
+        borderRadius: "50%",
     },
     mainWrapper: {
         display: "flex",
@@ -33,9 +36,12 @@ const useStyles = makeStyles((theme) => ({
     },
     titlebar: {
         fontSize: "20px",
-        height: "32px",
-        margin: theme.spacing(1),
+        height: "48px",
         border: "1px transparent",
+    },
+    titleImg: {
+        maxHeight: "48px",
+        objectFit: "contain",
     },
     menubar: {
         minHeight: "0px",
@@ -75,10 +81,9 @@ export default function Header() {
             <Box className={classes.headerWrapper}>
                 <img className={classes.icon} src={icon} alt="#" />
                 <Box className={classes.mainWrapper}>
-                    <input
-                        className={classes.titlebar}
-                        defaultValue="Welcome to AAA"
-                    />
+                    <div className={classes.titlebar}>
+                        <img src={titleImg} className={classes.titleImg} />
+                    </div>
                     <Toolbar
                         component="nav"
                         variant="dense"
@@ -94,7 +99,7 @@ export default function Header() {
                         ) : null}
                     </Toolbar>
                 </Box>
-                <IconButton>
+                <IconButton style={{ display: "none" }}>
                     <SettingsIcon fontSize="large" />
                 </IconButton>
                 <AccountDialog src={avatar ? avatar : user}></AccountDialog>

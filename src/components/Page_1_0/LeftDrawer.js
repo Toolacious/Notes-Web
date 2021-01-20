@@ -107,6 +107,7 @@ export default function PersistentDrawerLeft() {
                     classes={{
                         root: classes.nopad,
                     }}
+                    style={{ display: "none" }}
                     disableRipple={true}
                 >
                     <DeviceHubIcon />

@@ -141,7 +141,6 @@ export default function Main() {
     const addPage = (node) => {
         setPages([...pages, node]);
         setPageNum(pageNum + 1);
-        console.log(pages);
     };
 
     useEffect(() => {
@@ -151,7 +150,6 @@ export default function Main() {
                 { unsaved: false },
                 usernotes.find((e) => e.id === fileID)
             );
-            console.log(node);
             addPage(node);
         }
     }, [openFiles]);
@@ -219,9 +217,6 @@ export default function Main() {
 
                     // The result can be accessed through the `m`-variable.
                     g.forEach((match, groupIndex) => {
-                        console.log(
-                            `Found match, group ${groupIndex}: ${match}`
-                        );
                         if (groupIndex === 1) links.push(match);
                     });
                 }

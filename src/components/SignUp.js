@@ -20,7 +20,7 @@ import { CREATE_USER_MUTATION } from "../graphql/mutations";
 import { LOGIN_Mutation } from "../graphql/login";
 import { setAccessToken } from "../accessToken";
 import { useHistory } from "react-router-dom";
-
+import loginImg from "../icons/signup.jpg";
 import { AuthContext } from "../routes/auth";
 
 function Copyright() {
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "20px",
     },
     image: {
-        backgroundImage: "url(https://source.unsplash.com/random)",
+        backgroundImage: `url(${loginImg})`,
         backgroundRepeat: "no-repeat",
         backgroundColor:
             theme.palette.type === "light"

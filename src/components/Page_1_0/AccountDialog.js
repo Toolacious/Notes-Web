@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
     avatar: {
         height: "128px",
         width: "128px",
+        borderRadius: "50%",
     },
     headerAvatar: {
         height: "48px",
