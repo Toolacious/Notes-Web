@@ -113,6 +113,7 @@ export default function TagBar() {
                 newnotes.find((e) => e.id === currentOpenFile).tags.push(tag);
                 setuserNotes(newnotes);
                 setChipData([...chipData, tag]);
+                e.target.value = "";
                 await addtag({
                     variables: {
                         id: currentOpenFile,
@@ -121,7 +122,6 @@ export default function TagBar() {
                     },
                 });
                 setTag("");
-                e.target.value = "";
             } catch (err) {
                 console.log(err);
             }

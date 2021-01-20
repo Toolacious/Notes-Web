@@ -11,16 +11,15 @@ const Query = {
             console.log(err);
         }
     },
-    user: async (parent, args, { User }, info) => {
+    user: async (parent, args, { Notes }, info) => {
         try {
-            if (!args.query) {
-                const data = null;
-                return data;
-            }
-            const data = await User.findOne({ _id: args.query });
-            return data[0];
+            const data = await Notes.findOne({
+                _id: "600430241c879231fa93dcb4",
+            });
+            return data.notes[0].markdown;
         } catch (err) {
             console.log(err);
+            return err;
         }
     },
     usernotes: async (parent, { email }, { Notes }, info) => {

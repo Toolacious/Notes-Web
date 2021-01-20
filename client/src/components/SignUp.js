@@ -130,12 +130,7 @@ export default function SignUp() {
                         password,
                     },
                 });
-                if (!loading) {
-                    console.log("redirect");
-                }
                 if (response && response.data) {
-                    console.log("response");
-                    console.log(response.data);
                     setAccessToken(response.data.login.accessToken);
                 }
                 context.login(response.data.login);

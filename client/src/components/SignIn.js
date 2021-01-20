@@ -20,7 +20,7 @@ import { AuthContext } from "../routes/auth";
 import { setAccessToken } from "../accessToken";
 import { useHistory } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
-import loginImg from "../icons/login.png";
+import loginImg from "../icons/login.jpg";
 
 function Copyright() {
     return (

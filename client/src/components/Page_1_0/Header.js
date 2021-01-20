@@ -7,10 +7,10 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import SimpleMenu from "./MenuItem";
 import AccountDialog from "./AccountDialog";
 import NewDialog from "./NewDialog";
-import icon from "../../icons/icon.png";
-import user from "../../icons/avatar.png";
+import icon from "../../icons/icon.jpg";
+import user from "../../icons/avatar.jpg";
 import { AvatarContext } from "../../context/avatarContext";
-import titleImg from "../../icons/title.png";
+import titleImg from "../../icons/title.jpg";
 
 const useStyles = makeStyles((theme) => ({
     headerWrapper: {

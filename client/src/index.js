@@ -76,7 +76,6 @@ const RefreshLink = new TokenRefreshLink({
         });
     },
     handleFetch: (accessToken) => {
-        console.log(accessToken);
         setAccessToken(accessToken);
     },
     handleError: (err) => {
