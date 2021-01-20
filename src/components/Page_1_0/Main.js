@@ -144,6 +144,7 @@ export default function Main() {
     };
 
     useEffect(() => {
+        // add page in frontend
         if (openFiles.length > pageNum) {
             let fileID = openFiles[openFiles.length - 1];
             let node = Object.assign(
@@ -151,6 +152,20 @@ export default function Main() {
                 usernotes.find((e) => e.id === fileID)
             );
             addPage(node);
+        }
+        // delete page in frontend
+        if (openFiles.length < pageNum) {
+            let chipToDelete = pages.findIndex(
+                (e) => !openFiles.includes(e.id)
+            );
+            // set frontend pages
+            let updPages = pages.filter(
+                (data, index) => index !== chipToDelete
+            );
+            setPages(updPages);
+
+            // set pageNum
+            setPageNum(pageNum - 1);
         }
     }, [openFiles]);
 
@@ -162,30 +177,17 @@ export default function Main() {
             setDialogFunctions({
                 updFunc: async (e) => {
                     await save(id);
-                    deletePage(id);
+                    actions.close(id);
                     setOpenDialog(false);
                 },
                 closeFunc: () => {
-                    deletePage(id);
+                    actions.close(id);
                     setOpenDialog(false);
                 },
             });
         } else {
-            deletePage(id);
+            actions.close(id);
         }
-    };
-    const deletePage = (id) => {
-        let chipToDelete = openFiles.indexOf(id);
-
-        // set backend openFiles
-        actions.close(id);
-
-        // set frontend pages
-        let updPages = pages.filter((data, index) => index !== chipToDelete);
-        setPages(updPages);
-
-        // set pageNum
-        setPageNum(pageNum - 1);
     };
 
     const handleMode = (updMode) => {

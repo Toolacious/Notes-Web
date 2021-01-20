@@ -11,7 +11,6 @@ import icon from "../../icons/icon.png";
 import user from "../../icons/avatar.png";
 import { AvatarContext } from "../../context/avatarContext";
 import titleImg from "../../icons/title.png";
-import Image from "material-ui-image";
 
 const useStyles = makeStyles((theme) => ({
     headerWrapper: {
