@@ -22,7 +22,7 @@ const { static } = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-
+const bodyparser = require("body-parser");
 const server = new GraphQLServer({
     typeDefs: "./server/schema.graphql",
     resolvers: {
@@ -38,7 +38,8 @@ server.express.use(
         credentials: true,
     })
 );
-
+server.express.use(bodyparser.json({ limit: "50mb" }));
+server.express.use(bodyparser.urlencoded({ limit: "50mb", extended: true }));
 server.express.use(static("public"));
 server.express.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "public", "index.html"));
@@ -102,7 +103,7 @@ db.once("open", () => {
             port: PORT,
             cors: { credentials: true, origin: [`http://localhost:${PORT}`] },
             endpoint: "/graphql",
-            playground: "/graphql",
+            playground: false,
         },
         () => {
             console.log(`Listening on http://localhost:${PORT}`);

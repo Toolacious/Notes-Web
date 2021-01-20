@@ -1,6 +1,6 @@
 type Query {
     users(query: String): [User!]!
-    user(query: ID): User
+    user: String!
     usernotes(email: String!): [note]!
     userAvatar(id: String!): String!
 }
