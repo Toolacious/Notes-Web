@@ -4,7 +4,7 @@ const { GraphQLServer } = require("graphql-yoga");
 // import { Query } from "./resolvers/Query";
 const { Query } = require("./resolvers/Query");
 // import { Mutation } from "./resolvers/Mutations";
-const { Mutation } = require("./resolvers/Mutation");
+const { Mutation } = require("./resolvers/Mutations");
 // import { User } from "./model/User";
 const { User } = require("./model/User");
 // import { Notes } from "./model/Notes";

@@ -1,4 +1,4 @@
-export const Query = {
+const Query = {
     users: async (parent, args, { User }, info) => {
         try {
             if (!args.query) {

@@ -7,7 +7,7 @@ const { registerValidate, loginValidate } = require("../validation");
 const { genSalt, compare, hash } = require("bcryptjs");
 const { sendRefreshToken } = require("../sendRefreshToken");
 const { createAccessToken, createRefreshToken } = require("../auth");
-export const Mutation = {
+const Mutation = {
     createUser: async (parent, args, { User, Notes }, info) => {
         try {
             // validate
