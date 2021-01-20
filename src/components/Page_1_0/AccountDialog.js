@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
         width: "48px",
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
+        borderRadius: "50%",
     },
     headerAvatarWrapper: {
         display: "flex",

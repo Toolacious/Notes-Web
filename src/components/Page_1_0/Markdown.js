@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import RemarkMathPlugin from "remark-math";
 import { BlockMath, InlineMath } from "react-katex";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import gfm from "remark-gfm";
 import "katex/dist/katex.min.css";
 
@@ -17,7 +17,7 @@ const _mapProps = (props) => ({
             if (value) {
                 return (
                     <SyntaxHighlighter
-                        style={dark}
+                        style={vscDarkPlus}
                         language={language}
                         children={value}
                     />

@@ -11,12 +11,15 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import LinkIcon from "@material-ui/icons/Link";
 import LocalOfferOutlinedIcon from "@material-ui/icons/LocalOfferOutlined";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import { filecontext } from "../../context/filetree";
 import { mainContext } from "../../context/mainContext";
+import { SettingsInputComponentOutlined } from "@material-ui/icons";
 
 const sidebarWidth = 32;
 const drawerWidth = 256;
@@ -62,6 +65,10 @@ const useStyles = makeStyles((theme) => ({
         padding: "0px",
         margin: "6px 0px 6px 6px",
     },
+    linksIOTitle: {
+        height: "28px",
+        padding: theme.spacing(2, 0),
+    },
 }));
 
 export default function PersistentDrawerRight() {
@@ -74,6 +81,9 @@ export default function PersistentDrawerRight() {
     //links, tags to be showed
     const [inlinks, setInLink] = useState([]);
     const [outlinks, setOutLink] = useState([]);
+    const [openIn, setOpenIn] = useState(false);
+    const [openOut, setOpenOut] = useState(false);
+
     useEffect(() => {
         try {
             if (currentOpenFile) {
@@ -199,34 +209,95 @@ export default function PersistentDrawerRight() {
                 <Divider style={{ height: "3px" }} />
                 <div style={{ flexGrow: 1, overflowY: "auto" }}>
                     <List disablePadding={true}>
-                        {showingItem.map((text, index) => (
+                        {r_mode === "tag" ? (
+                            tags.map((text, index) => (
+                                <>
+                                    <ListItem
+                                        button
+                                        key={index}
+                                        onClick={() => {
+                                            handleSearch(text[0]);
+                                        }}
+                                    >
+                                        <ListItemText
+                                            primary={"# " + text[0]}
+                                        />
+                                        <ListItemText
+                                            primary={text[1]}
+                                            style={{ textAlign: "right" }}
+                                        />
+                                    </ListItem>
+                                    <Divider />
+                                </>
+                            ))
+                        ) : (
                             <>
                                 <ListItem
                                     button
-                                    key={index}
-                                    onClick={() => {
-                                        r_mode === "tag"
-                                            ? handleSearch(text[0])
-                                            : handleLink(text[1]);
-                                    }}
+                                    key="inLinks"
+                                    onClick={() => setOpenIn(!openIn)}
+                                    className={classes.linksIOTitle}
                                 >
-                                    <ListItemText
-                                        primary={
-                                            r_mode === "tag"
-                                                ? "# " + text[0]
-                                                : text[0]
-                                        }
-                                    />
-                                    <ListItemText
-                                        primary={
-                                            r_mode === "tag" ? text[1] : ""
-                                        }
-                                        style={{ textAlign: "right" }}
-                                    />
+                                    {openIn ? (
+                                        <ExpandLessIcon />
+                                    ) : (
+                                        <ExpandMoreIcon />
+                                    )}
+                                    <ListItemText primary={"Linked from..."} />
                                 </ListItem>
                                 <Divider />
+                                {openIn
+                                    ? inlinks.map((text, index) => (
+                                          <>
+                                              <ListItem
+                                                  button
+                                                  key={index}
+                                                  onClick={() => {
+                                                      handleLink(text[1]);
+                                                  }}
+                                              >
+                                                  <ListItemText
+                                                      primary={text[0]}
+                                                  />
+                                              </ListItem>
+                                              <Divider />
+                                          </>
+                                      ))
+                                    : null}
+                                <ListItem
+                                    button
+                                    key="outLinks"
+                                    onClick={() => setOpenOut(!openOut)}
+                                    className={classes.linksIOTitle}
+                                >
+                                    {openOut ? (
+                                        <ExpandLessIcon />
+                                    ) : (
+                                        <ExpandMoreIcon />
+                                    )}
+                                    <ListItemText primary={"Link to..."} />
+                                </ListItem>
+                                <Divider />
+                                {openOut
+                                    ? outlinks.map((text, index) => (
+                                          <>
+                                              <ListItem
+                                                  button
+                                                  key={index}
+                                                  onClick={() => {
+                                                      handleLink(text[1]);
+                                                  }}
+                                              >
+                                                  <ListItemText
+                                                      primary={text[0]}
+                                                  />
+                                              </ListItem>
+                                              <Divider />
+                                          </>
+                                      ))
+                                    : null}
                             </>
-                        ))}
+                        )}
                     </List>
                 </div>
             </Drawer>

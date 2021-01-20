@@ -91,6 +91,7 @@ const useStyles = makeStyles((theme) => ({
         right: "6px",
         borderRadius: "16px",
         border: "1px solid black",
+        backgroundColor: "white",
     },
     nopad: {
         padding: "0px",
@@ -302,6 +303,13 @@ export default function Main() {
                             >
                                 <EditIcon />
                             </IconButton>
+                            <Divider
+                                orientation="vertical"
+                                style={{
+                                    height: "24px",
+                                    backgroundColor: "rgb(160, 160, 160)",
+                                }}
+                            ></Divider>
                             <IconButton
                                 color={mode === "mix" ? "inherit" : "default"}
                                 onClick={() => handleMode("mix")}
@@ -315,16 +323,26 @@ export default function Main() {
                             {pageNum === openFiles.length &&
                             pages[openFiles.indexOf(currentOpenFile)]
                                 .unsaved ? (
-                                <IconButton
-                                    id="saveMain"
-                                    onClick={() => save(currentOpenFile)}
-                                    classes={{
-                                        root: classes.nopad,
-                                    }}
-                                    disableRipple={true}
-                                >
-                                    <SaveIcon />
-                                </IconButton>
+                                <>
+                                    <Divider
+                                        orientation="vertical"
+                                        style={{
+                                            height: "24px",
+                                            backgroundColor:
+                                                "rgb(160, 160, 160)",
+                                        }}
+                                    ></Divider>
+                                    <IconButton
+                                        id="saveMain"
+                                        onClick={() => save(currentOpenFile)}
+                                        classes={{
+                                            root: classes.nopad,
+                                        }}
+                                        disableRipple={true}
+                                    >
+                                        <SaveIcon />
+                                    </IconButton>
+                                </>
                             ) : null}
                             {openDialog ? (
                                 <SaveDialog func={dialogFunctions}></SaveDialog>
