@@ -5,8 +5,9 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 
 import ListItem from "@material-ui/core/ListItem";
-
 import ListItemText from "@material-ui/core/ListItemText";
+import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { filecontext } from "../../context/filetree";
 import { mainContext } from "../../context/mainContext";
@@ -24,14 +25,27 @@ const useStyles = makeStyles((theme) => ({
             borderColor: theme.palette.text.primary,
         },
     },
+    linksIOTitle: {
+        height: "28px",
+        padding: theme.spacing(2, 0),
+    },
 }));
 
 export default function SearchBox() {
     const classes = useStyles();
     const { usernotes, actions } = useContext(filecontext);
     const { searchStr, setSearchStr } = useContext(mainContext);
-    //const [searchStr, setSearchStr] = useState("");
-    const [showingItem, setShowingItem] = useState([]);
+    const [tagItem, setTagItem] = useState([]);
+    const [titleItem, setTitleItem] = useState([]);
+    const [mdItem, setMdItem] = useState([]);
+    const [openTitle, setOpenTitle] = useState(false);
+    const [openMd, setOpenMd] = useState(false);
+
+    const autoFocus = () => {
+        if (document.getElementsByClassName("input")[0]) {
+            document.getElementsByClassName("input")[0].focus();
+        }
+    };
 
     const search = (e) => {
         setSearchStr(e.target.value);
@@ -51,22 +65,27 @@ export default function SearchBox() {
                     });
                 });
                 console.log("search tag");
-                setShowingItem(alltags);
+                setTagItem(alltags);
             } else {
-                let allfiles = [];
+                let titlefiles = [];
+                let mdfiles = [];
                 usernotes.forEach((e) => {
                     let { title, id, markdown } = e;
-                    if (
-                        e.markdown.includes(searchStr) ||
-                        e.title.includes(searchStr)
-                    ) {
-                        allfiles.push({ title, id, markdown });
+                    if (e.title.includes(searchStr)) {
+                        titlefiles.push({ title, id, markdown });
+                    }
+                    if (e.markdown.includes(searchStr)) {
+                        mdfiles.push({ title, id, markdown });
                     }
                 });
                 console.log("search files");
-                setShowingItem(allfiles);
+                setTitleItem(titlefiles);
+                setMdItem(mdfiles);
             }
-        } else setShowingItem([]);
+        } else {
+            setTitleItem([]);
+            setMdItem([]);
+        }
 
         return () => {};
     }, [searchStr]);
@@ -86,28 +105,92 @@ export default function SearchBox() {
             <Divider style={{ height: "3px" }} />
             <div style={{ flexGrow: 1, overflowY: "auto" }}>
                 <List disablePadding={true}>
-                    {showingItem.map((obj, index) => (
+                    {searchStr.slice(0, 5) === "tags:" ? (
+                        tagItem.map((obj, index) => (
+                            <>
+                                <ListItem
+                                    button
+                                    key={index}
+                                    onClick={() => {
+                                        actions.open(obj.id);
+                                        autoFocus();
+                                    }}
+                                >
+                                    <ListItemText primary={obj.title} />
+                                </ListItem>
+                                <Divider />
+                            </>
+                        ))
+                    ) : (
                         <>
                             <ListItem
                                 button
-                                key={index}
-                                onClick={() => {
-                                    actions.open(obj.id);
-                                    if (
-                                        document.getElementsByClassName(
-                                            "input"
-                                        )[0]
-                                    )
-                                        document
-                                            .getElementsByClassName("input")[0]
-                                            .focus();
-                                }}
+                                key="titleMatched"
+                                onClick={() => setOpenTitle(!openTitle)}
+                                className={classes.linksIOTitle}
                             >
-                                <ListItemText primary={obj.title} />
+                                {openTitle ? (
+                                    <ExpandLessIcon />
+                                ) : (
+                                    <ExpandMoreIcon />
+                                )}
+                                <ListItemText primary={"File"} />
                             </ListItem>
                             <Divider />
+                            {openTitle
+                                ? titleItem.map((obj, index) => (
+                                      <>
+                                          <ListItem
+                                              button
+                                              key={index}
+                                              onClick={() => {
+                                                  actions.open(obj.id);
+                                                  autoFocus();
+                                              }}
+                                          >
+                                              <ListItemText
+                                                  primary={obj.title}
+                                              />
+                                          </ListItem>
+                                          <Divider />
+                                      </>
+                                  ))
+                                : null}
+                            <ListItem
+                                button
+                                key="mdMatched"
+                                onClick={() => setOpenMd(!openMd)}
+                                className={classes.linksIOTitle}
+                            >
+                                {openMd ? (
+                                    <ExpandLessIcon />
+                                ) : (
+                                    <ExpandMoreIcon />
+                                )}
+                                <ListItemText primary={"Content"} />
+                            </ListItem>
+                            <Divider />
+                            {openMd
+                                ? mdItem.map((obj, index) => (
+                                      <>
+                                          <ListItem
+                                              button
+                                              key={index}
+                                              onClick={() => {
+                                                  actions.open(obj.id);
+                                                  autoFocus();
+                                              }}
+                                          >
+                                              <ListItemText
+                                                  primary={obj.title}
+                                              />
+                                          </ListItem>
+                                          <Divider />
+                                      </>
+                                  ))
+                                : null}
                         </>
-                    ))}
+                    )}
                 </List>
             </div>
         </>
