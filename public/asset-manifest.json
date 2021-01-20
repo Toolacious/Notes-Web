@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.5cc1a196.chunk.css",
-    "main.js": "/static/js/main.670edbad.chunk.js",
-    "main.js.map": "/static/js/main.670edbad.chunk.js.map",
+    "main.js": "/static/js/main.21fcc9c8.chunk.js",
+    "main.js.map": "/static/js/main.21fcc9c8.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.cd335c78.js",
     "runtime-main.js.map": "/static/js/runtime-main.cd335c78.js.map",
     "static/css/2.f5bf874f.chunk.css": "/static/css/2.f5bf874f.chunk.css",
@@ -15,16 +15,17 @@
     "static/css/main.5cc1a196.chunk.css.map": "/static/css/main.5cc1a196.chunk.css.map",
     "static/js/2.d71defcb.chunk.js.LICENSE.txt": "/static/js/2.d71defcb.chunk.js.LICENSE.txt",
     "static/media/katex.min.css": "/static/media/KaTeX_Typewriter-Regular.c5441b17.ttf",
-    "static/media/icon.62305e2e.png": "/static/media/icon.62305e2e.png",
-    "static/media/login.bd291095.png": "/static/media/login.bd291095.png",
+    "static/media/avatar.dae53026.jpg": "/static/media/avatar.dae53026.jpg",
+    "static/media/icon.e44a45f6.jpg": "/static/media/icon.e44a45f6.jpg",
+    "static/media/login.71966ff7.jpg": "/static/media/login.71966ff7.jpg",
     "static/media/signup.e3594763.jpg": "/static/media/signup.e3594763.jpg",
-    "static/media/title.2337ac1d.png": "/static/media/title.2337ac1d.png"
+    "static/media/title.b86a37ea.jpg": "/static/media/title.b86a37ea.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.cd335c78.js",
     "static/css/2.f5bf874f.chunk.css",
     "static/js/2.d71defcb.chunk.js",
     "static/css/main.5cc1a196.chunk.css",
-    "static/js/main.670edbad.chunk.js"
+    "static/js/main.21fcc9c8.chunk.js"
   ]
 }
