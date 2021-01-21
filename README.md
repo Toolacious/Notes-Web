@@ -1,6 +1,6 @@
 # Abyss-Notes
 ## 功能簡介
-### Start up 
+
 1. [New File](#new)  
 2. [Rename File](#rename)  
 3. [Delete File](#delete)
@@ -84,23 +84,32 @@ https://abyss-notes.herokuapp.com/
 ## Demo 影片連結
 ## Packages
 Frontend:
-1. React
+1. React, Materials-UI  
 2. Apollo
 1. react-markdown
 1. formik and Yup
 1. react-image-crop
+
 Backend:  
 1. @hapi/joi:check registration data  
 1. cors  
 1. bcryptjs: encrypt blank password  
 1. jsonwebtoken  
+1. Graphql-yoga
 ## Reference 
 https://github.com/benawad/jwt-auth-example.git  
 https://github.com/hidjou/classsed-merng-client.git
 ## Framework
-前端:React, Materials-UI  
-後端:MongoDb, Express.js, Node.js, Graphql-yoga
+前端:React
+後端:MongoDb, Express.js, Node.js, Graphql
 ## 組員貢獻
 周毓修:  
+  * 登入/註冊介面
+  * jwt驗證
+  * 後端功能
+  * 前後端溝通
+  * 裁切照片/markdown預覽/tags,links搜尋  
+  * Deployment  
+  
 黃維坪:
-## 課程建議
+## 心得
