@@ -16,6 +16,7 @@ type Mutation {
     deleteNote(id: String!, email: String!): Boolean!
     addtag(id: String!, email: String!, tag: String!): Boolean!
     deletetag(index: Int!, id: String!, email: String!): Boolean!
+    deleteUser(email: String!): Boolean!
 }
 
 input CreateUserInput {
