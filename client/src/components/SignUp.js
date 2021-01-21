@@ -143,7 +143,7 @@ export default function SignUp() {
 
     return (
         <div
-            style={{ width: "100vw", height: "100vh" }}
+            style={{ width: "100vw", height: "auto" }}
             className={classes.image}
         >
             <Container
