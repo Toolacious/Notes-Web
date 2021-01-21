@@ -150,5 +150,15 @@ const Mutation = {
             return err;
         }
     },
+    deleteUser: async (parent, { email }, { Notes, User }, info) => {
+        try {
+            await Notes.deleteOne({ email });
+            await User.deleteOne({ email });
+            return true;
+        } catch (err) {
+            console.log(err);
+            return err;
+        }
+    },
 };
 module.exports.Mutation = Mutation;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -7,10 +7,12 @@ import Dialog from "@material-ui/core/Dialog";
 import { useHistory } from "react-router-dom";
 import { useMutation } from "@apollo/react-hooks";
 import { LOGOUT_Mutation } from "../../graphql/logout";
+import { DELUSER_Mutation } from "../../graphql/deleteUser";
 import { AuthContext } from "../../routes/auth";
 import { getAccessToken, setAccessToken } from "../../accessToken";
 
 import UploadDialog from "./UploadDialog";
+import DeleteUserDialog from "./deleteUserDialog";
 
 const useStyles = makeStyles((theme) => ({
     avatar: {
@@ -41,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "18px",
         textTransform: "none",
     },
+    deleteButton: {
+        width: "256px",
+        fontSize: "18px",
+        textTransform: "none",
+        color: "red",
+    },
     dialog: {},
 }));
 
@@ -50,7 +58,7 @@ function SimpleDialog(props) {
     const history = useHistory();
     const [logout] = useMutation(LOGOUT_Mutation);
 
-    const { onClose, onOpen, selectedValue, open, avatar_src } = props;
+    const { onClose, onOpen, selectedValue, open, avatar_src, func } = props;
 
     const handleClose = () => {
         onClose(selectedValue);
@@ -88,15 +96,23 @@ function SimpleDialog(props) {
             >
                 Log out
             </Button>
+            <Button className={classes.deleteButton} onClick={func}>
+                Delete User
+            </Button>
         </Dialog>
     );
 }
 
 export default function AccountDialog(props) {
+    const context = useContext(AuthContext);
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-    const [uploadOpen, setUploadOpen] = React.useState(false);
-    const [selectedValue, setSelectedValue] = React.useState(0);
+    const history = useHistory();
+    const [logout] = useMutation(LOGOUT_Mutation);
+    const [open, setOpen] = useState(false);
+    const [delOpen, setDelOpen] = useState(false);
+    const [uploadOpen, setUploadOpen] = useState(false);
+    const [selectedValue, setSelectedValue] = useState(0);
+    const [delUser] = useMutation(DELUSER_Mutation);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -111,6 +127,22 @@ export default function AccountDialog(props) {
         setUploadOpen(false);
     };
 
+    const closeFunc = () => {
+        setDelOpen(false);
+        handleClickOpen();
+    };
+
+    const delFunc = async (e) => {
+        e.preventDefault();
+        await delUser({ variables: { email: context.user.email } });
+        await logout();
+        setAccessToken("");
+        if (!getAccessToken()) {
+            history.push("/");
+            context.logout();
+        }
+    };
+
     return (
         <div className={classes.headerAvatarWrapper}>
             <img
@@ -119,6 +151,11 @@ export default function AccountDialog(props) {
                 alt="#"
                 onClick={handleClickOpen}
             />
+            <DeleteUserDialog
+                open={delOpen}
+                func={{ delFunc, closeFunc }}
+                onClose={closeFunc}
+            />
             <SimpleDialog
                 selectedValue={selectedValue}
                 open={open}
@@ -126,6 +163,10 @@ export default function AccountDialog(props) {
                 onOpen={() => {
                     handleClose();
                     setUploadOpen(true);
+                }}
+                func={() => {
+                    handleClose();
+                    setDelOpen(true);
                 }}
                 avatar_src={props.src}
             />
