@@ -108,5 +108,7 @@ https://github.com/hidjou/classsed-merng-client.git
   * 後端功能
   * 前後端溝通
   * 裁切照片/markdown預覽/tags,links搜尋  
+  * Deployment  
+  
 黃維坪:
 ## 心得
