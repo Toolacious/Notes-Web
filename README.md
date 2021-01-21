@@ -88,6 +88,8 @@ https://abyss-notes.herokuapp.com/
 
 ## Demo 影片連結
 
+https://youtu.be/s83x_i8uxqM
+
 ## Packages
 
 Frontend:
@@ -113,7 +115,7 @@ https://github.com/hidjou/classsed-merng-client.git
 
 ## Framework
 
-前端:React
+前端:React  
 後端:MongoDb, Express.js, Node.js, Graphql
 
 ## 組員貢獻
@@ -139,8 +141,12 @@ https://github.com/hidjou/classsed-merng-client.git
 
 黃維坪:
 
-第一次做一個完整的網站，我們挑選了一個比較基礎的主題--線上筆記軟體。我負責的部分是前端
-，製作完設計圖後，使用各種 Material-UI 的部件組成。在實作過程中，需要讓各部件溝通以正確
-完成的 CRUD 操作並與後端連接，比想像中困難許多，也是花上最多時間的部分。微調介面使我對襙作 css
-更為熟悉，並學會如何結合各種不同的 hook 來完成部件間的溝通，最後做後端串接時則需要兩人一
-起討論與測試，抓出各種 bug。在這學期的課程中獲得完整開發一個網頁服務的寶貴經驗，能學以致用非常有成就感。
+> 第一次做一個完整的網站，我們挑選了一個比較基礎的主題--線上筆記軟體。我負責的部分是前端
+>，製作完設計圖後，使用各種 Material-UI 的部件組成。在實作過程中，需要讓各部件溝通以正確
+> 完成的 CRUD 操作並與後端連接，比想像中困難許多，也是花上最多時間的部分。微調介面使我對操作 css
+> 更為熟悉，並學會如何結合各種不同的 hook 來完成部件間的溝通，最後做後端串接時則需要兩人一
+> 起討論與測試，抓出各種 bug。在這學期的課程中獲得完整開發一個網頁服務的寶貴經驗，能學以致用非常有成就感。
+
+周毓修: 
+> 期末前原本先架了一個純express的server，但後來學到graphql便決定改用graphql-yoga來建server，從考完期末開始建，到現在deploy到heroku總共差不多一個禮拜，能做出這個作品實在是很高興。> 期間最困難的是jwt token的驗證和set cookie的流程，完成後真的是爽到不行。這次的project讓我大致了解了web開發的所有流程，這個經驗實在非常值得，這門課只能說一句: 大推!
+
