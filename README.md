@@ -89,6 +89,7 @@ Frontend:
 1. react-markdown
 1. formik and Yup
 1. react-image-crop
+
 Backend:  
 1. @hapi/joi:check registration data  
 1. cors  
