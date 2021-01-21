@@ -5,7 +5,6 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-//import Link from "@material-ui/core/Link";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -26,9 +25,9 @@ function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {"Copyright © "}
-            <Link color="inherit" to="https://material-ui.com/">
+            <a color="inherit" href="https://abyss-notes.herokuapp.com">
                 Abyss Notes
-            </Link>{" "}
+            </a>{" "}
             {new Date().getFullYear()}
             {"."}
         </Typography>
