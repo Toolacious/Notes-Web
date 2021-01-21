@@ -1,6 +1,7 @@
-import { sign } from "jsonwebtoken";
+// import { sign } from "jsonwebtoken";
+const { sign } = require("jsonwebtoken");
 
-export const createAccessToken = (user) => {
+const createAccessToken = (user) => {
     return sign(
         { userId: user.id, email: user.email, name: user.name },
         process.env.ACCESS_TOKEN_SECRET,
@@ -10,7 +11,7 @@ export const createAccessToken = (user) => {
     );
 };
 
-export const createRefreshToken = (user) => {
+const createRefreshToken = (user) => {
     return sign(
         { userId: user.id, tokenVersion: user.tokenVersion },
         process.env.REFRESH_TOKEN_SECRET,
@@ -19,3 +20,5 @@ export const createRefreshToken = (user) => {
         }
     );
 };
+module.exports.createAccessToken = createAccessToken;
+module.exports.createRefreshToken = createRefreshToken;

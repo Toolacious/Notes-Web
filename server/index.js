@@ -1,17 +1,28 @@
 require("dotenv-defaults").config();
-import { GraphQLServer, PubSub } from "graphql-yoga";
-import { Query } from "./resolvers/Query";
-import { Mutation } from "./resolvers/Mutations";
-import { User } from "./model/User";
-import { Notes } from "./model/Notes";
-import { createAccessToken, createRefreshToken } from "./auth";
-import { sendRefreshToken } from "./sendRefreshToken";
-import { verify } from "jsonwebtoken";
+// import { GraphQLServer } from "graphql-yoga";
+const { GraphQLServer } = require("graphql-yoga");
+// import { Query } from "./resolvers/Query";
+const { Query } = require("./resolvers/Query");
+// import { Mutation } from "./resolvers/Mutations";
+const { Mutation } = require("./resolvers/Mutations");
+// import { User } from "./model/User";
+const { User } = require("./model/User");
+// import { Notes } from "./model/Notes";
+const { Notes } = require("./model/Notes");
+// import { createAccessToken, createRefreshToken } from "./auth";
+const { createAccessToken, createRefreshToken } = require("./auth");
+// import { sendRefreshToken } from "./sendRefreshToken";
+const { sendRefreshToken } = require("./sendRefreshToken");
+// import { verify } from "jsonwebtoken";
+const { verify } = require("jsonwebtoken");
+// import path from "path";
+const path = require("path");
+// import { static } from "express";
+// const { static } = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const bodyparser = require("body-parser");
-
 const server = new GraphQLServer({
     typeDefs: "./server/schema.graphql",
     resolvers: {
@@ -20,15 +31,20 @@ const server = new GraphQLServer({
     },
     context: (req) => ({ ...req, User, Notes }),
 });
-
+const PORT = process.env.PORT || 4000;
 server.express.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: `http://localhost:3000`,
         credentials: true,
     })
 );
 server.express.use(bodyparser.json({ limit: "50mb" }));
 server.express.use(bodyparser.urlencoded({ limit: "50mb", extended: true }));
+// server.express.use(static("public"));
+// server.express.get("*", (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "public", "index.html"));
+// });
+
 server.express.use("/refresh_token", cookieParser());
 
 server.express.post("/refresh_token", async (req, res) => {
@@ -81,13 +97,13 @@ db.on("error", (error) => {
 
 db.once("open", () => {
     console.log("MongoDB connected!");
-    const PORT = process.env.port || 4000;
 
     server.start(
         {
             port: PORT,
-            cors: { credentials: true, origin: ["http://localhost:3000"] },
-            playground: "/graphql",
+            cors: { credentials: true, origin: [`http://localhost:3000`] },
+            endpoint: "/graphql",
+            playground: false,
         },
         () => {
             console.log(`Listening on http://localhost:${PORT}`);

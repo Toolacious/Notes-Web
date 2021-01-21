@@ -2,7 +2,7 @@
 const Joi = require("@hapi/joi");
 
 //Register Validate
-export const registerValidate = (data) => {
+const registerValidate = (data) => {
     const schema = {
         fname: Joi.string().max(50).required(),
         lname: Joi.string().max(50).required(),
@@ -14,10 +14,13 @@ export const registerValidate = (data) => {
 };
 
 //Login Validate
-export const loginValidate = (data) => {
+const loginValidate = (data) => {
     const schema = Joi.object({
         email: Joi.string().min(6).required().email(),
         password: Joi.string().min(6).required(),
     });
     return Joi.validate(data, schema, { abortEarly: false });
 };
+
+module.exports.loginValidate = loginValidate;
+module.exports.registerValidate = registerValidate;

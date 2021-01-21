@@ -1,4 +1,4 @@
-export const Query = {
+const Query = {
     users: async (parent, args, { User }, info) => {
         try {
             if (!args.query) {
@@ -14,7 +14,7 @@ export const Query = {
     user: async (parent, args, { Notes }, info) => {
         try {
             const data = await Notes.findOne({
-                _id: "600430241c879231fa93dcb4",
+                _id: "60087eb95df31741a8df5934",
             });
             return data.notes[0].markdown;
         } catch (err) {
@@ -41,3 +41,4 @@ export const Query = {
         }
     },
 };
+module.exports.Query = Query;

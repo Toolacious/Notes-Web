@@ -4,7 +4,6 @@ const NoteSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
-        unique: true,
     },
     markdown: {
         type: String,
@@ -38,4 +37,5 @@ const NotesSchema = new mongoose.Schema({
     },
 });
 
-export const Notes = mongoose.model("Notes", NotesSchema);
+const Notes = mongoose.model("Notes", NotesSchema);
+module.exports.Notes = Notes;
